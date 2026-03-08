@@ -1,0 +1,5 @@
+# AI Rules & Mandates
+
+CRITICAL: For all project rules, architectural mandates, coding standards, and AI-specific instructions, you MUST refer to the `GEMINI.md` file in the project root.
+
+`GEMINI.md` is the canonical source of truth for this project across all AI-powered IDEs and agents.
