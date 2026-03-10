@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prompt To IDE Brief"
+  short_description: "Turn messy prompts into IDE-ready briefs"
+  default_prompt: "Convert the user's raw prompt into the brief template with guardrails and deliverables."
