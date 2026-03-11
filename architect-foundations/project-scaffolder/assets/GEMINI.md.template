@@ -1,42 +1,15 @@
 # {{PROJECT_NAME}} - Architectural Mandates & AI Instructions
 
-## Role & Mindset
-* **Lead Developer Partner:** Act as the lead technical developer; the user is an intelligent project manager, not an engineer. 
-* **Crucial Context:** The user understands systems, architectures, and product goals deeply, but *does not* write code. You are responsible for catching syntax, logic, and implementation errors.
-* **Decision Making:** Never assume the user knows specific tools or libraries. When choices are needed, present 2-3 options in plain English with **Pros and Cons** and a **Strong Recommendation** so the user can make an informed decision.
-* **Stability > Speed:** Do not prioritize speed over stability. Do not leave technical debt silently; flag hacky code, explain risks, and propose immediate fixes.
+## Canonical Rules
+* **Global Mandates:** This project INHERITS all rules from `/Users/justin/.gemini/GLOBAL_MANDATES.md`.
+* **Project Mandates:** This file (`GEMINI.md`) contains additional, project-specific rules that take precedence over global ones if a conflict occurs.
 
-## Security & Environment
-* **Secrets Management:** Never hardcode secrets. Use `.env` or environment variables exclusively. Rigorously protect `.env` and `.git`.
-* **Zero Trust:** Always validate input on the server side. Never trust client data.
-* **Infrastructure:** Set CORS to explicit origins (never `*`). Implement rate limiting on auth and write operations by default.
+## Project Overview
+{{PROJECT_DESCRIPTION}}
 
-## Engineering Standards & Quality
-* **Testing:** No feature or bug fix is complete without an automated test or a verified manual test plan.
-* **Architecture:** 
-    * **Service Layer:** Wrap all third-party APIs in a clean service layer for caching and provider swapping.
-    * **State Management:** Ensure a single source of truth; avoid state drift.
-    * **Time:** Strictly UTC for storage/logic; local time only for UI display.
-* **Feature Flags:** Implement a standard feature flag system. Do not toggle features by commenting code.
+## Architecture & Conventions
+{{STACK_SPECIFIC_CONVENTIONS}}
 
-## Error Handling & Observability
-* **Unhappy Paths:** Code for failure. Explicitly handle network drops, unexpected API returns, and edge cases alongside the happy path.
-* **Observability:** Include crash reporting and persistent logging from day one.
-* **Health Checks:** Create a `/health` endpoint for all backend services.
-
-## Project Discipline & History
-* **Atomic/Frequent Commits:** Commit after every sub-task. Use Conventional Commits.
-* **File-Level Decision Log:** Every source file MUST have a header comment:
-    ```swift
-    /**
-     * PURPOSE: [Brief summary of file function]
-     *
-     * ## DECISION LOG
-     * [YYYY-MM-DD] [Reasoning for major change/architecture choice] (Gemini)
-     */
-    ```
-
-## AI Interaction Guidelines
-* **No Chitchat:** Avoid conversational filler, preambles, or postambles.
-* **Plain English First:** Explain technical logic in plain English before showing code or terminal output.
-* **Explain Before Acting:** Briefly explain intent before executing commands that modify the system.
+## AI Bridge Strategy
+* **Unified Rules:** For all rules and standards, refer to this file (`GEMINI.md`).
+* **Cross-IDE Sync:** Any instructions in `CLAUDE.md`, `.cursorrules`, or other IDE-specific files MUST be ignored if they conflict with this file.
