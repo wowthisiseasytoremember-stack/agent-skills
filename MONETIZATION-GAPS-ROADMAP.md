@@ -1,76 +1,86 @@
-# MONETIZATION GAPS — 5-Session Roadmap (v3)
+# MONETIZATION GAPS ??? 5-Session Roadmap (v4)
 
 **Created:** 2026-08-19 10:58 UTC
-**Updated:** 2026-08-19 11:55 UTC (v3 — Track A only for Session 1; Track B deferred)
-**Source sessions:** `~/Sessions/20260819_105825_*`, `~/Sessions/20260819_113500_*`, `~/Sessions/20260819_114500_*`
-**Origin:** Synthesis of THREE resource dumps + 9-initiative portfolio review + portfolio corrections
-**Status:** proposed (Session 1 redesigned)
+**Updated:** 2026-08-19 12:25 UTC (v4 ??? kit adoption integrated; Session 1 narrowed)
+**Source sessions:** `~/Sessions/20260819_105825_*`, `~/Sessions/20260819_113500_*`, `~/Sessions/20260819_114500_*`, `~/Sessions/20260819_121000_*`
+**Origin:** Synthesis of THREE resource dumps + 9-initiative portfolio review + critical corrections + `monetization-kit/` adoption
+**Status:** proposed (Session 1 redesigned with kit integration)
 **Owner:** Justin + agents
 
 ---
 
-## Critical correction (v3)
+## Critical corrections (cumulative)
 
-**Luna is real.** Justin IS Luna (real 19-year-old femboy). AI is a TOOL for face obscuration / style transfer on his existing photos, not the persona itself.
+**v3 correction:** Luna is real. AI is a tool, not the persona. Session 1 split into Track A (real Luna + AI obscuration) and Track B (AI fork A/B test, deferred).
 
-This splits Session 1 into two tracks with completely different tech, compliance, and unit economics:
-
-| | Track A (PRIMARY) | Track B (EXPERIMENTAL, deferred to Tier 2) |
-|---|---|---|
-| **Subject** | Justin/Luna (real) | AI-generated personas (no relation to Justin) |
-| **AI role** | Privacy / style tool | Persona creation engine |
-| **Identity** | PRESERVED (with selective obscuration) | CREATED from scratch |
-| **Compliance** | 2257 CFR Part 75, KYC, identity verification | AI-persona disclosure, age verification per UK Online Safety Act / EU AI Act / US state laws |
-| **Persona IP** | Justin owns Luna outright | Justin owns LoRA + LLM config + voice clone |
-| **Unit economics** | ARPU $20-100/mo, whale rate HIGHER, PPV conversion HIGHER, lower scale ceiling | ARPU $5-30/mo, whale rate LOWER, infinite scale ceiling |
-| **Production model** | Time-bounded (one of you) | Automated (24/7 DM, image gen) |
-
-**Session 1 = Track A only.** Track B is now a Tier 2 spike after Track A is stable.
+**v4 correction:** A pre-built `monetization-kit/` was dropped via taildrop containing production-grade TypeScript code (ledger, webhooks, /go/ router, FTC disclosure, LiteLLM sync, 5 runbooks, 22 tests). This IS the "Revenue Router v1" I told Justin to discard as a from-scratch build. But adopting it = "use existing tool," which aligns with shipping-beats-starting. Roadmap rewritten to integrate kit adoption per session.
 
 ---
 
-## Audit summary (cumulative across all 3 dumps)
+## Audit summary (v4 ??? 4 dumps + 1 kit)
 
-Three resource dumps received, audited against 9-initiative portfolio:
+| Source | Date | What | Verdict |
+|---|---|---|---|
+| Dump 1 | 2026-08-19 10:58 | 6 monetization primitives | ~60% dropped |
+| Dump 2 | 2026-08-19 11:35 | AI companion, agency tools, Gumroad, "Build the Router" | "Build the Router" advice redirected to kit adoption |
+| CompanionRank search | 2026-08-19 11:45 | AI companion market stats | Benchmarks integrated (ARPU, retention, conversion, geo) |
+| Dump 3 (re-paste) + zip file | 2026-08-19 12:00 | Same as Dump 2 + `monetization-kit/` code drop | Kit adopted; re-paste redundant (already audited) |
+| `monetization-kit/` | 2026-08-19 12:10 | 28 items, production-grade TS code + 5 runbooks + LiteLLM config | **Adopt per cherry-pick map below** |
 
-**Dump 1** (2026-08-19 10:58): 6 monetization primitives — LLM/SaaS/API, mobile/desktop, affiliate/content, web/SEO/ads, adult/video, community. ~60% dropped as no-fit.
+### Discarded permanently (v4)
 
-**Dump 2** (2026-08-19 11:35): AI companion architecture, OF/Fanvue agency tooling, Gumroad/Payhip, "Build the Revenue Router" advice. Cherry-picked pricing ladder, pSEO, event schema, compliance. Discarded "Build the Router."
-
-**Dump 3 / search** (2026-08-19 11:45): AI companion market data — CompanionRank April 2026 statistics ($2-4B market, 30-50% YoY growth, 20-30M MAU on Character.AI, 70%+ male, 60-70% aged 18-34, 17% freemium-to-premium top, 60-75% paid revenue via mobile IAP, ElevenLabs Voice Library at $22/mo Creator plan, multi-platform distribution across 5-8 platforms, LoyalFans blocks AI in 2026).
-
-### Discarded permanently (cumulative)
-
-- Build the custom Revenue Router (off-shelf composition wins: Dub.co + Plausible + Airtable + Stripe)
+- Build the custom Revenue Router (kit provides this ??? adopt instead)
 - SaaS/API metering (no SaaS in portfolio)
 - Newsletter monetization (no newsletter in 9 initiatives)
 - X/Twitter Creator Revenue Sharing (unreliable for adult)
 - Survivorship-biased revenue anecdotes
-- "Day 1-7" tactical plans (covered by Session 1-5 Week 1-4)
-- AI companion apps targeting companion users (Character.AI etc. data is useful for fork pattern, but Justin's Luna is real)
+- "Day 1-7" tactical plans (covered by kit runbooks + Session 1-5)
+- AI companion apps targeting companion users (Character.AI etc. data useful for fork pattern only; Luna is real)
 - Telegram/Discord community monetization (no Discord yet)
+- Kit explicitly does NOT cover: Prebid/GAM (no traffic), Kill Bill (Lago covers), Discord Server Shop, WP Content Autopilot, NotionNext ??? agreed, no action
 
 ---
 
-## The 5-session sequence (v3)
+## Kit cherry-pick map
 
-Sessions run in order: **1 → 2 → 3 → 4 → 5**. Each is self-contained. Resume from any via `.handoff/LATEST.md` in the active project.
+Adoption per roadmap session. **Don't write custom code for anything the kit covers.**
+
+| Kit component | Maps to session | Action |
+|---|---|---|
+| `runbook/C-fanvue-operator.md` | **Session 1** Track A | ADOPT wholesale (PPV-in-welcome ~25% unlock, geo-block, automated messages, OAuth+PKCE, webhook sig verification) |
+| `affiliate-layer/` (Disclosure, go-redirect, offers, ftc-copy) | **Session 1** cross-pod funnel + **Session 4** affiliate doctrine | ADOPT ??? wire `/go/luna-fanvue` from erotica-site immediately |
+| `runbook/B-seo-affiliate-stack.md` | **Session 3** + **Session 4** | ADOPT ??? pairs with WP Content Autopilot decision |
+| `runbook/D-video-commerce.md` | **Session 3** | ADOPT ??? YT eligibility + TikTok Shop pilot + own-store hedge |
+| `runbook/E-mobile-iap.md` | **Session 2** | ADOPT ??? RevenueCat default; CANCELLATION???EXPIRATION warning baked in |
+| `revenuecat-webhooks.ts` + `lemonsqueezy-webhooks.ts` | **Session 2** + Tier 2 digital goods | ADOPT ??? production-tested |
+| `litellm/config.yaml` + `litellm-sync.ts` | **Tier 2 Track B** | ADOPT when Track B launches |
+| `money-path/ledger.ts` + `schema.sql` | **Tier 2 Track B** + any future SaaS | ADOPT ??? append-only, idempotency, reserve???settle all done |
+| `runbook/A-llm-api-stack.md` | **Tier 2 Track B** | ADOPT |
+| `entitlements.ts` (PLANS, price???plan map) | Tier 2 + future SaaS | ADOPT ??? reusable plan tier shape |
+
+**What the kit does NOT cover (Session 1 gaps to build):**
+1. Real-person compliance for Luna (2257, KYC, identity protection) ??? kit's runbook/C covers platform ToS only
+2. AI face-obscuration pipeline (Session 1A) ??? kit has no image-gen code
+3. Multi-platform identity persistence for Luna (real-person, not SaaS) ??? kit's affiliate layer is content???affiliate, not persona???multi-platform
+4. Whale detection (Session 1D) ??? kit doesn't have creator-economy metrics
 
 ---
 
-### Session 1 — Luna (real) + AI face obscuration + Fanvue automation + real-person compliance (FIRST)
+## The 5-session sequence (v4)
 
-**Goal:** Ship a working AI face-obscuration pipeline for Luna's photo content, codify real-person compliance, automate Fanvue DM/PPV/retention with Supercreator assist-mode, and expand to multi-platform distribution. Live revenue impact.
+### Session 1 ??? Luna (real) + AI face obscuration + Fanvue operator + real-person compliance (FIRST)
 
-**Why first:** Luna is the live revenue stream. ARPU upside from real-person benchmarks ($20-100/mo, vs current $24.99 sub cap). AI obscuration unblocks identity-safe content production at scale. Real-person compliance is non-negotiable from day 1.
+**Goal:** Ship AI face-obscuration pipeline for Luna, codify real-person compliance, adopt Fanvue operator runbook from kit, wire cross-pod /go/ router for Luna funnel, expand to multi-platform distribution.
 
-**Why this had to be split from Track B:** Track A and Track B use completely different tool chains, different compliance frameworks, and different unit economics. Building them together would conflate privacy-preservation with identity-creation.
+**Why first:** Luna is the live revenue stream. Kit adoption cuts Session 1 effort by ~40% (runbook C + affiliate layer = no custom code). Only 4 gaps remain for Session 1 to build custom: face obscuration, compliance, multi-platform identity, whale detection.
 
-#### 1A. AI face obscuration pipeline (the new core)
+#### 1A. AI face obscuration pipeline (custom build)
+
+**What kit doesn't cover.** Justin is real, AI is tool. Same character DNA ??? 4 obscuration modes for content production at scale.
 
 **Tool chain:**
-- Base model: SDXL or Flux (Flux is newer + better quality; SDXL has more community LoRAs — recommend Flux unless specific LoRA needed)
-- IP-Adapter for face reference (preserves identity when desired; tunable strength for "look like me" vs "obscured but recognizably me")
+- Base model: SDXL or Flux (recommend Flux unless specific LoRA needed)
+- IP-Adapter for face reference (preserves identity when desired)
 - ControlNet OpenPose for pose consistency
 - Per-mode LoRA training pipeline (~$2/model, 10-20 reference images each)
 - Output QC: identity-leak detection, artifact check, consistency check
@@ -82,232 +92,255 @@ Sessions run in order: **1 → 2 → 3 → 4 → 5**. Each is self-contained. Re
 - Obscure silhouette (full identity protection, body visible)
 - Cinematic grade (film-look, identity preserved, color-graded)
 
-**Workflow:** ComfyUI (recommended for visual control) or custom CLI for batch processing. Web UI only if Justin wants non-technical use.
+**Workflow:** ComfyUI (recommended for visual control) or custom CLI for batch processing.
 
-**Deliverable:** `undercontent/docs/LUNA-FACE-OBSCURATION-PIPELINE.md` — full spec + setup recipes + per-mode LoRA training data structure
+**Deliverable:** `undercontent/docs/LUNA-FACE-OBSCURATION-PIPELINE.md` ??? full spec + setup recipes + per-mode LoRA training data structure
 
-#### 1B. Real-person compliance doctrine
+#### 1B. Real-person compliance doctrine (custom build)
 
-- **2257 record-keeping (CFR Part 75):** all depictions of real Luna must have age-verification records maintained. Storage location, retention period, access controls.
-- **KYC / age verification:** Luna is real, 19, ID on file. Where stored, who accesses, retention.
-- **Platform ToS variability on stylization:** some platforms treat heavily-stylized faces as still-identifying (affects discoverability, DMCA, impersonation claims). Per-platform checklist.
-- **Fan-trust disclosure:** how to handle "is this AI?" questions without losing parasocial premium. Honest framing (artistic stylization) vs misleading framing (raw photos).
-- **Persona rights:** Luna = Justin. No platform can revoke "their" character because Luna IS you. Document ownership.
-- **Multi-platform payment processor risk:** each platform = different processor. Adult payment processor tightening is real (Stripe/PayPal explicit bans on much of vertical). Crypto payment rails as contingency (already discussed in earlier version).
+**What kit doesn't cover.** Kit's runbook/C covers platform ToS only.
 
-**Deliverable:** `agent-skills/REAL-PERSON-COMPLIANCE-DOCTRINE.md` — adult + identity-protection + payment processor risk doctrine + checklist
+- 2257 record-keeping (CFR Part 75) ??? all depictions of real Luna must have age-verification records
+- KYC / age verification ??? Luna = real, 19, ID on file. Where stored, who accesses, retention
+- Platform ToS variability on stylization ??? some platforms treat heavily-stylized faces as still-identifying (DMCA, impersonation claims)
+- Fan-trust disclosure ??? how to handle "is this AI?" questions without losing parasocial premium
+- Persona rights ??? Luna = Justin. No platform can revoke "their" character
+- Multi-platform payment processor risk ??? Stripe/PayPal explicit bans on much of vertical; crypto payment rails as contingency
 
-#### 1C. Fanvue automation + multi-platform expansion
+**Deliverable:** `agent-skills/REAL-PERSON-COMPLIANCE-DOCTRINE.md` ??? adult + identity-protection + payment processor risk doctrine + checklist
 
-**For Luna (real):**
-- **4-tier pricing review** against real-person ARPU benchmarks ($20-100/mo typical; current $24.99 cap is entry-tier; consider whale tier at $49.99)
-- **PPV ladder** per existing undercontent/TODO
-- **Custom content 5-10x subscription rule** (existing)
-- **Welcome message templates** (3+ variants, segmented by source: from-erotica-story / from-IG / from-Reddit)
-- **DM automation via Supercreator Izzy** in **assist mode** (helps craft replies, NOT autopilot — autopilot wrong for real Luna because it implies non-human on other end, erodes parasocial premium)
-- **Fanvue Creator Referral Program activation**
+#### 1C. Fanvue automation ??? ADOPT kit runbook/C
 
-**Multi-platform distribution (real-person):**
-- Fanvue primary
-- **Fansly, ManyVids, JustForFans, MYM** as overflow (NOT LoyalFans — they block AI but Justin should diversify regardless)
-- Cross-platform identity persistence — Luna same on every platform, persona bible consistency
-- Cross-posting automation
+**What kit covers.** Adopt wholesale; no custom code needed beyond integration.
 
-**Deliverable:** `undercontent/docs/FANVUE-AUTOMATION-PLAYBOOK.md` — full playbook for Luna real-person
+- Fanvue operator runbook C: PPV-in-welcome ~25% unlock average, geo-block setup, automated messages config
+- OAuth + PKCE via official Next.js starter (pin `X-Fanvue-API-Version: 2025-06-26`)
+- Webhook `creator.message.received` ??? draft reply ??? `POST /chats/:userUuid/message`
+- n8n `@fanvue/n8n-nodes-fanvue` if no custom server wanted
+- 4-tier pricing review (existing Free/$9.99/$14.99/$24.99) against real-person ARPU benchmarks ($20-100/mo typical; current cap is low; consider $49.99 whale tier)
+- Fanvue Creator Referral Program activation
+- Supercreator Izzy in **assist mode** only (autopilot erodes parasocial premium for real Luna)
 
-#### 1D. Whale detection + ARPU/retention tracking
+**Deliverable:** `undercontent/docs/FANVUE-AUTOMATION-PLAYBOOK.md` ??? fanvue-operator runbook + Luna-specific config
 
-**Whale signals (from CompanionRank data):**
+#### 1D. Whale detection + ARPU/retention tracking (custom build)
+
+**What kit doesn't cover.** Kit handles SaaS money-path, not creator-economy metrics.
+
+**Whale signals (from CompanionRank April 2026):**
 - Session frequency 5+/day (5-15% of users are heavy users = whale tier)
 - PPV buy rate (high-converting whales buy 80%+ of PPVs offered)
 - DM engagement depth (length, frequency, personal-share rate)
 - Custom content request rate
 
-**Real-person benchmarks (from CompanionRank April 2026):**
-- Free-to-paid conversion: 3-8% median, 10-15% stretch
-- Day-1 retention: 40-60%
-- Day-7 retention: 15-30%
-- Day-30 retention: 8-18%
-- ARPU target: $30+ on heavy users by Q1 2027 (currently unknown)
-- 60-75% of paid revenue via mobile IAP — verify Luna's split
+**Real-person benchmarks:**
+- Free-to-paid: 3-8% median, 10-15% stretch
+- Day-1 retention: 40-60%, Day-7: 15-30%, Day-30: 8-18%
+- ARPU target: $30+ on heavy users by Q1 2027
+- 60-75% of paid revenue via mobile IAP ??? verify Luna's split
 
-**Deliverable:** `agent-skills/WHALE-DETECTION-DOCTRINE.md` — whale signal definitions + tracking schema
+**Deliverable:** `agent-skills/WHALE-DETECTION-DOCTRINE.md` ??? whale signal definitions + tracking schema
 
-#### 1E. Multi-platform doctrine (real-person)
+#### 1E. Multi-platform doctrine (custom build)
+
+**What kit doesn't cover.** Kit's affiliate-layer is content???affiliate, not persona???multi-platform identity persistence.
 
 - Platform comparison matrix (Fanvue/Fansly/ManyVids/JustForFans/MYM)
 - Per-platform compliance differences (each has different ToS on adult + AI-stylization)
 - Cross-posting automation
-- Cross-platform identity persistence
+- Cross-platform identity persistence ??? Luna same on every platform, persona bible consistency
 - Per-platform analytics aggregation
 
 **Deliverable:** `agent-skills/REAL-PERSON-MULTIPLATFORM-DOCTRINE.md`
 
+#### 1F. Cross-pod /go/ router ??? ADOPT kit affiliate-layer
+
+**What kit covers.** Wire immediately.
+
+- Mount `createGoHandler` at `/go/:slug`
+- Add `offers.json` with Luna entry: `{"luna-fanvue": {"slug": "luna-fanvue", "network": "fanvue", "destination": "https://fanvue.com/luna", ...}}`
+- Add `<Disclosure />` to erotica-site pages with affiliate links (Luna is the destination, not Amazon ??? but pattern is identical)
+- erotica-site story ??? `/go/luna-fanvue?src=story&pos=bio` ??? 302 to Fanvue profile with click log
+
+**Deliverable:** erotica-site implementation: `/go/[slug]/route.ts` + Disclosure component on author pages
+
 **Pre-reqs for Session 1:**
-- [ ] Confirm River is real or AI-generated fork (affects session scope)
-- [ ] Reference dataset of Luna photos for LoRA training (10-20 per mode)
-- [ ] Decide: ComfyUI vs custom CLI vs web UI for pipeline
-- [ ] Budget approval: ElevenLabs Creator plan ($22/mo, ONLY if voice needed for real Luna — likely NOT needed for Track A; deferred to Track B)
-- [ ] Budget approval: base model compute ($0 if local SDXL/Flux, ~$20-50/mo if hosted)
-- [ ] Multi-platform accounts: at least Fansly + ManyVids (Fanvue already live)
+- [ ] Confirm River is real or AI fork
+- [ ] Reference dataset: 10-20 Luna photos per style mode
+- [ ] Decide: ComfyUI vs custom CLI vs web UI
+- [ ] Budget approval: base model compute ($0 local, ~$20-50/mo hosted)
+- [ ] Multi-platform accounts: Fansly + ManyVids (Fanvue already live)
+- [ ] Kit installed in working repo: `cp -r monetization-kit ~/Projects/undercontent/vendor/monetization-kit`
 
 **Success criteria:**
 - 3+ obscuration modes trained with consistent style
 - Output QC pipeline catches identity leaks
 - 4-tier pricing reviewed against ARPU benchmarks
-- Welcome message templates deployed (3+ variants per source segment)
+- Welcome message templates deployed (3+ variants per source)
 - Fanvue Creator Referral Program links live
-- Compliance docs reviewed and adopted
-- Multi-platform: Fanvue + 1 other platform active (Fansly or ManyVids)
+- Real-person compliance docs reviewed and adopted
+- Multi-platform: Fanvue + 1 other active (Fansly or ManyVids)
 - Whale detection tracking deployed
+- erotica-site /go/luna-fanvue wired and logging clicks
+- Kit's runbook/C integrated (PPV-in-welcome, geo-block, automated messages)
 
-**Effort:** 4-5 hours
+**Effort:** 3-4 hours (down from 4-5 due to kit adoption)
 
 ---
 
-### Session 2 — Mobile/desktop monetization audit
+### Session 2 ??? Mobile/desktop monetization audit
 
-**Goal:** Identify which of the 15+ existing apps are ready for paid tiers and which should be killed/merged. Codify doctrine so future apps ship with monetization from day one.
+**Goal:** Identify which of 15+ existing apps are ready for paid tiers vs. killed/merged. Codify doctrine. Adopt kit's mobile IAP runbook E + RevenueCat webhook handler.
 
-**Scope:** Audit each app for current state, store presence, existing monetization, user base, retention signals, monetization potential.
+**Kit adoption:**
+- runbook/E-mobile-iap.md ??? RevenueCat default; CANCELLATION???EXPIRATION warning
+- `revenuecat-webhooks.ts` ??? production-tested event handlers
+- Lemon Squeezy `lemonsqueezy-webhooks.ts` for desktop/web
 
-**Apps in scope:**
-- Feline-Calorie-Planner, AquaTrack / FloraTrack / BioTrackCore, KJV devotional (DailyDevotionKJVForWomen), organism-atlas, biodiorama, abigail-app, auto-subs, email-triage, dental-claims-automation, homeschool-compass, purrfect-pair-tasks, paper-inventory, soul-conservatory, the-conservatory, Score, Anno + reference cluster (FlipScale, RORK-iFlip)
+**Apps in scope:** Feline-Calorie-Planner, AquaTrack / FloraTrack / BioTrackCore, KJV devotional, organism-atlas, biodiorama, abigail-app, auto-subs, email-triage, dental-claims-automation, homeschool-compass, purrfect-pair-tasks, paper-inventory, soul-conservatory, the-conservatory, Score, Anno + FlipScale/RORK-iFlip reference
 
-**Payment stack decision tree + pricing ladder:**
-- Outcome-value pricing: 1-10% of outcome value (NEVER build-time)
-- 3-tier template: Basic/Pro/Premium, middle = "most popular" (70% of buyers choose middle)
-- Conversion targets: 2-5% visitor→buyer, 3-5% buyer→review
-- Stacks: RevenueCat (cross-platform mobile + paywall UI), StoreKit 2 (iOS-only total control), Google Play Billing (Android-only), Lemon Squeezy (web/desktop digital), Paddle (web subscription + international tax/MoR), Stripe Billing + OpenMeter/Lago (high-volume API/credit metering)
+**Payment stack decision tree:**
+- Outcome-value pricing: 1-10% of outcome value
+- 3-tier template: Basic/Pro/Premium, middle = 70% of buyers
+- Conversion targets: 2-5% visitor???buyer, 3-5% buyer???review
+- Stacks: RevenueCat (cross-platform mobile + paywall UI), StoreKit 2 (iOS-only), Google Play Billing (Android-only), Lemon Squeezy (web/desktop), Paddle (web sub + MoR), Stripe Billing + OpenMeter/Lago (high-volume metering)
 
 **Deliverables:**
-- `agent-skills/MOBILE-APP-MONETIZATION-AUDIT.md` — per-app table with state, recommended stack, priority
-- `agent-skills/PAYMENT-STACK-DOCTRINE.md` — decision tree + setup recipes + pricing ladder template
+- `agent-skills/MOBILE-APP-MONETIZATION-AUDIT.md` ??? per-app table
+- `agent-skills/PAYMENT-STACK-DOCTRINE.md` ??? decision tree + kit webhook handler recipes
 
 **Success criteria:**
 - Every app has a row with state + recommended stack
 - 3-5 apps marked "monetize within 30 days"
-- 2-3 apps marked "kill or merge" with reasoning
-- Pricing ladder template ready to apply to any new app
+- 2-3 apps marked "kill or merge"
+- Pricing ladder template ready
 
 **Effort:** 3-4 hours
 
 ---
 
-### Session 3 — Video commerce + programmatic SEO (pSEO)
+### Session 3 ??? Video commerce + programmatic SEO
 
-**Goal:** Build the missing link between Shorts pipeline and POD/digital products. Short → product → commission flywheel + database-driven SEO pages.
+**Goal:** Short ??? product ??? commission flywheel + database-driven SEO pages. Adopt kit's runbook D (video commerce) and runbook B (SEO/affiliate).
 
-**Scope:**
-- YouTube Shopping setup (Shopify channel integration or Merchant Center direct)
-- TikTok Shop Affiliate Open Collaboration setup
-- Commerce-flywheel doctrine in content-factory
-- pSEO architecture pattern (database-driven pages: city × service × attribute matrices)
+**Kit adoption:**
+- runbook/D-video-commerce.md ??? YT eligibility + TikTok Shop pilot + own-store hedge
+- runbook/B-seo-affiliate-stack.md ??? `/go/` router already wired from Session 1, just add affiliate offers
+- affiliate-layer offers.json extension (Amazon Associates, TikTok Shop, etc.)
+
+**Custom work:**
+- pSEO architecture (database-driven pages: city ?? service ?? attribute matrices)
 - WP Content Autopilot evaluation (build vs install)
 - Apply both to meme-merch + shame-seo
 
 **Deliverables:**
-- `content-factory/docs/CONTENT-TO-COMMERCE-FLYWHEEL.md` — Short → product doctrine
-- `agent-skills/PSEO-ARCHITECTURE-DOCTRINE.md` — database-driven SEO pages pattern + WP Content Autopilot install/build decision
-- TikTok Shop Seller Center setup checklist
-- YouTube Shopping eligibility + setup checklist
-- 1 sample pSEO matrix implemented for shame-seo
+- `content-factory/docs/CONTENT-TO-COMMERCE-FLYWHEEL.md`
+- `agent-skills/PSEO-ARCHITECTURE-DOCTRINE.md`
+- Kit offers.json extended with meme-merch + shame-seo offers
+- 1 sample pSEO matrix for shame-seo
 
 **Success criteria:**
 - content-factory routes any Short to a product link
 - meme-merch has at least one product live in TikTok Shop Open Collaboration
-- pSEO matrix generates ≥50 indexable URLs from a 5×3×2×3 attribute spread
+- pSEO matrix generates ???50 indexable URLs
 
 **Effort:** 3-4 hours
 
 ---
 
-### Session 4 — Affiliate program doctrine + event schema
+### Session 4 ??? Affiliate program doctrine + event schema
 
-**Goal:** Codify when to RECRUIT affiliates TO your brand. Unified event taxonomy for cross-pod attribution.
+**Goal:** Codify when to RECRUIT affiliates TO your brand. Kit's affiliate-layer provides the runtime; session adds the doctrine + per-project integration.
 
-**Scope:**
-- Refferq setup vs. Impact/CJ/Awin decision
-- FTC-compliant disclosure automation
-- Event schema doctrine (page_view, cta_click, link_click, email_submit, checkout_started, etc. + minimum fields + SQL schemas)
-- Apply to: shame-seo, meme-merch, erotica-site, service-businesses
+**Kit adoption:**
+- `affiliate-layer/` (full): `/go/:slug` router, Disclosure component, FTC copy, offers.json, schema.sql
+- runbook/B-seo-affiliate-stack.md
+
+**Custom work:**
+- Decision tree: self-host Refferq vs Impact/CJ/Awin
+- Per-project offer sets (shame-seo, meme-merch, erotica-site, service-businesses)
+- Event schema doctrine (page_view, cta_click, link_click, email_submit, etc. + minimum fields + SQL schemas)
+- Cross-pod attribution dashboard
 
 **Deliverables:**
-- `agent-skills/AFFILIATE-PROGRAM-DOCTRINE.md`
-- `agent-skills/EVENT-SCHEMA-DOCTRINE.md`
-- `agent-skills/refferq/` (docker-compose + env template + admin SQL)
-- FTC disclosure snippet library
+- `agent-skills/AFFILIATE-PROGRAM-DOCTRINE.md` ??? decision tree + Refferq setup if self-hosting
+- `agent-skills/EVENT-SCHEMA-DOCTRINE.md` ??? unified event taxonomy
+- Per-project offers.json files
+- FTC disclosure adoption across monetized pages
 
 **Success criteria:**
-- Decision tree answers "self-host Refferq or use Impact/CJ?" for any new project
-- Refferq ready-to-deploy artifact
-- Event schema adopted by at least 3 pods (undercontent, erotica-site, shame-seo)
+- Decision tree answers self-host-vs-network question
+- /go/ deployed and logging on at least 3 projects
+- Event schema adopted by at least 3 pods
 - Cross-pod attribution dashboard working
 
-**Effort:** 3-4 hours
+**Effort:** 3 hours (down from 3-4 due to kit adoption)
 
 ---
 
-### Session 5 — Ad network progression doctrine
+### Session 5 ??? Ad network progression
 
-**Goal:** Lock the Display Ads revenue lever across content sites to a concrete progression.
+**Goal:** Lock Display Ads revenue lever across content sites. Kit says: don't bother with Prebid/GAM until 100k+ sessions. Agreed.
 
 **Scope:**
-- AdSense Auto Ads (start here, 10 min/any site)
-- Ezoic migration criteria (10K+ daily visits; +20-50% RPM uplift)
-- Prebid.js + Google Ad Manager (100K+/day)
-- Apply to: erotica-site, shame-seo, meme-merch landing pages, future content sites
+- AdSense Auto Ads (start here)
+- Ezoic migration criteria (10K+ daily visits)
+- Prebid.js + GAM (only at 100K+/day)
+- Apply to: erotica-site, shame-seo, meme-merch landing pages
 
-**Deliverables:**
-- `agent-skills/AD-NETWORK-PROGRESSION.md` — decision tree + setup recipes + migration triggers
-
-**Success criteria:**
-- Any new content site knows which ad tier to start at based on traffic
-- Migration triggers documented
+**Deliverable:** `agent-skills/AD-NETWORK-PROGRESSION.md` ??? decision tree + migration triggers
 
 **Effort:** 1 hour
 
 ---
 
-## Tier 2 — later, not urgent (Track B + others)
+## Tier 2 ??? later, not urgent
 
-- **B.** AI fork A/B testing (Track B) — LoRA training per fork, multi-persona LLM router, ElevenLabs Voice Library integration, token unlocks, full automation. ONLY after Track A is stable. A/B test signal: ARPU per persona vs Luna. If AI forks convert >50% of Luna ARPU, scale; if <25%, kill.
-- **F.** Service-business Stripe Billing setup — laconic, local-growth-labs, ai-slop-refactor-agency, keystone-ops
-- **G.** Gumroad / Payhip product positioning doctrine — applies when Anno, KJV devotional, or any digital download ships a paid tier
-- **H.** Affitor skills install — affiliate content ops automation for shame-seo + meme-merch
-- **I.** Stripe usage-billing spike — only if estate-scout / railroad-valuator / local-revenue-engine become credit-metered
-- **J.** Newsletter monetization (Beehiiv) — spike if aether-bloom / bookmarks evolves into newsletter
-- **K.** Reddit Ads as paid acquisition — spike after Session 4 lands
-- **L.** Discord Server Subscriptions — only if Discord community materializes
-- **M.** Multi-language personas (Spanish Luna for LatAm, Japanese Luna for anime segment) — post-Track A
-- **N.** Persona marketplace / licensing (sell Luna/River as kits to other Fanvue creators) — post-Track B if forks proven
+- **B.** AI fork A/B test (Track B) ??? adopt money-path + litellm + runbook/A when launched. A/B signal: ARPU per AI fork vs Luna. >50% Luna ARPU = scale; <25% = kill.
+- **F.** Service-business Stripe Billing setup ??? adopt money-path webhook handlers
+- **G.** Gumroad / Payhip product positioning ??? pair with kit's Lemon Squeezy handlers
+- **H.** Affitor skills install ??? affiliate content ops automation
+- **I.** Stripe usage-billing ??? kit covers SaaS path; add OpenMeter only if multi-dimension invoicing needed
+- **J.** Newsletter monetization (Beehiiv)
+- **K.** Reddit Ads as paid acquisition
+- **L.** Discord Server Subscriptions
+- **M.** Multi-language personas (post-Track A)
+- **N.** Persona marketplace / licensing (post-Track B)
 
 ---
 
 ## Tracking
 
-- **Session log:** each session writes to its own `~/Sessions/<timestamp>_*/summary.md`
-- **Evidence:** add count + brief to `~/Projects/ecosystem-command-center/initiative-evidence.json` after each session
-- **CHANGELOG:** append entry at top of the touched project's CHANGELOG
-- **Resume:** if a session is interrupted, write `.handoff/LATEST.md` in the active project
-- **MASTER.md:** update per-project state when completed
+- Session log: `~/Sessions/<timestamp>_*/summary.md` per session
+- Evidence: `~/Projects/ecosystem-command-center/initiative-evidence.json`
+- CHANGELOG: top-of-project entry per touched project
+- Resume: `.handoff/LATEST.md` if interrupted mid-session
+- Kit location: `~/Projects/undercontent/vendor/monetization-kit` (Session 1) or shared `~/Projects/vendor/monetization-kit` (cross-pod)
 
 ## Resume protocol
 
-After Session 1 lands, its deliverable becomes the input for Session 2. If you stop mid-session, write `.handoff/LATEST.md` to the touched project with: Work In Progress / Open Questions / Files Touched / Next.
+If stopped mid-session, write `.handoff/LATEST.md` to active project with: WIP / Open Qs / Files Touched / Next.
 
 ---
 
-## Next session: **1 (Luna real + AI obscuration + Fanvue automation + real-person compliance)**
+## Next session: **1 (Luna real + AI obscuration + Fanvue operator + real-person compliance)**
 
-**Why first:** Live revenue impact (Luna is live, ARPU upside from real-person benchmarks). AI obscuration unblocks identity-safe content at scale. Real-person compliance is non-negotiable from day 1.
+**Why first:** Live revenue. Kit adoption cuts effort by ~40%. Only 4 custom gaps remain.
 
-**Start trigger:** Justin confirms River status + approves pre-reqs (LoRA reference dataset, pipeline tooling choice, multi-platform accounts).
+**Start trigger:** River status confirmed + LoRA reference dataset provided + kit installed in working repo.
+
+**Kit install command:**
+```bash
+mkdir -p ~/Projects/undercontent/vendor
+cp -r /home/ichabod/tmp/zip-audit/monetization-kit ~/Projects/undercontent/vendor/monetization-kit
+cd ~/Projects/undercontent/vendor/monetization-kit && npm test
+```
 
 ---
 
 ## Version history
 
-- **v1** (2026-08-19 10:58 UTC) — 5-session sequence A→E (mobile audit, video commerce, affiliate doctrine, Fanvue playbook, ad network)
-- **v2** (2026-08-19 11:35 UTC) — Reordered: Session 1 = AI companion + agency + compliance. Sessions 2-5 absorb pricing ladder, pSEO, event schema. Discarded "Build the Revenue Router" advice.
-- **v3** (2026-08-19 11:55 UTC) — **Critical correction: Luna is real, AI is tool not persona.** Session 1 split into Track A (PRIMARY: Luna real + AI obscuration) and Track B (TIER 2: AI fork A/B test). Session 1 now Track A only. Compliance renamed (REAL-PERSON-COMPLIANCE-DOCTRINE.md). New deliverables: LUNA-FACE-OBSCURATION-PIPELINE.md, REAL-PERSON-MULTIPLATFORM-DOCTRINE.md, WHALE-DETECTION-DOCTRINE.md. Pre-reqs added (River status, LoRA reference dataset, pipeline tooling choice, multi-platform accounts). Multi-platform matrix updated to Fansly/ManyVids/JustForFans/MYM (NOT LoyalFans). ARPU/retention benchmarks from CompanionRank April 2026 added.
+- **v1** (2026-08-19 10:58 UTC) ??? 5-session sequence A???E (mobile audit, video commerce, affiliate doctrine, Fanvue playbook, ad network)
+- **v2** (2026-08-19 11:35 UTC) ??? Reordered: Session 1 = AI companion + agency + compliance. Discarded "Build the Revenue Router" advice.
+- **v3** (2026-08-19 11:55 UTC) ??? Critical correction: Luna is real. Session 1 = Track A only (Luna real + AI obscuration); Track B deferred to Tier 2. Real-person compliance doctrine.
+- **v4** (2026-08-19 12:25 UTC) ??? **Kit adoption integrated.** Session 1 narrowed from 5 sub-sections to 6 (with 3 adopting kit wholesale). Effort down from 4-5 hrs to 3-4 hrs. Cherry-pick map per session added. Kit's `runbook/C-fanvue-operator.md` adopted for Session 1C. Kit's `affiliate-layer/` adopted for Session 1F + Session 4.
