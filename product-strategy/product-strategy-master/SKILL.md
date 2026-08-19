@@ -1,32 +1,35 @@
 ---
 name: product-strategy-master
-description: Master orchestrator for product planning, metrics, and roadmap strategy. Use when the user asks for high-level project planning, market analysis, or roadmap development. This skill coordinates sub-skills for OKRs, sprint planning, and user journey validation.
+description: Master orchestrator for product planning, metrics, and roadmap strategy. Use when the user asks for high-level project planning, market analysis, or roadmap development. This skill coordinates sub-skills for OKRs, experiments, discovery, and launch readiness.
 ---
 
 # Product Strategy Master
 
 ## Overview
-This is the master orchestrator for the Product Strategy squad. It is designed to handle complex, high-level product requests by decomposing them into specific tasks and delegating them to the specialized sub-skills in the `product-strategy/` directory.
+This is the master orchestrator for the Product Strategy squad. It routes high-level product requests to the specialized sub-skills in the `product-team/` directory (vendored from alirezarezvani/claude-skills, MIT).
 
 ## Core Capabilities
 When triggered, this skill will analyze the request and decide which of the following sub-skills to activate in parallel:
 
-1.  **Planning & Roadmapping:**
-    *   `okr-breakdown-alignment`: Aligning goals with high-level OKRs.
-    *   `sprint-story-planner`: Generating Jira-ready tickets from vague ideas.
-    *   `timeline-critical-path-planner`: Building roadmaps and identifying bottlenecks.
-    *   `feature-launch-plan-generator`: Creating pre/post-launch checklists.
+1.  **Strategy & Roadmapping:**
+    *   `product-strategist`: Breaking OKRs into initiatives with success metrics.
+    *   `roadmap-communicator`: Translating roadmap/sprint state into exec-facing narratives.
+    *   `spec-to-repo`: Turning specs into repos / validating roadmap flows against code.
 
-2.  **Analysis & Validation:**
-    *   `user-journey-validator`: Ensuring the codebase supports the roadmap flow.
-    *   `user-interview-synthesis`: Turning raw feedback into product bets.
-    *   `competitor-feature-tracker`: Ranking threats and engineering lift.
-    *   `data-privacy-impact-assessment`: Checking for GDPR/PII risks.
+2.  **Discovery & Validation:**
+    *   `product-discovery`: Structuring user research and feedback into product bets.
+    *   `ux-researcher-designer`: Synthesizing user interviews into insights and designs.
+    *   `competitive-teardown`: Ranking competitor moves by strategic threat.
 
-3.  **Metrics & Success:**
-    *   `metrics-kpi-designer`: Defining leading and lagging indicators.
-    *   `ab-test-design-success-criteria`: Designing tests with sample size and duration.
-    *   `burn-down-velocity-translator`: Executive-friendly health summaries.
+3.  **Experiments & Metrics:**
+    *   `experiment-designer`: A/B test design with sample size and decision rules.
+    *   `product-analytics`: Defining KPIs, funnels, and health metrics.
+
+4.  **Launch & Growth:**
+    *   `product-manager-toolkit`: Cross-cutting PM workflows (launch, prioritization).
+    *   `landing-page-generator`: Building launch landing pages.
+    *   `saas-scaffolder`: Scaffolding SaaS products end to end.
+    *   `ui-design-system`: Establishing a design system baseline.
 
 ## Workflow
 1.  **Analyze Request:** Determine the depth and breadth of the product request.
