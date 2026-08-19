@@ -18,9 +18,21 @@ When triggered, this skill will analyze the request and activate the appropriate
 
 2.  **Design System & Identity:**
     *   `design-token-compiler`: Syncing JSON tokens with SwiftUI/CSS extensions.
-    *   `design-engineering-handoff-checklist`: Validating design completeness before engineering starts.
     *   `branding-refactor`: Auditing and refactoring legacy project names (e.g., iFlip to FlipScale).
     *   `museum-placard-ui`: Implementing clean, descriptive UI components.
+
+## Inline Formats
+
+These outputs are produced directly by this master (no separate skill needed):
+
+### Design-to-Engineering Handoff Checklist
+When given a design mockup or description, validate completeness before coding starts:
+- States (empty, loading, error, success).
+- Edge cases (long text, mobile responsiveness, dark mode).
+- Interactions (click, hover, scroll).
+- Accessibility hints (keyboard nav, screen readers).
+
+Return: 'Ready to hand to eng' or 'Design needs 1 more pass'.
 
 ## Workflow
 1.  **Understand Foundation:** Determine if the request is for a new project, a core refactor, or a design system update.
