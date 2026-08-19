@@ -1,29 +1,151 @@
 ---
 name: design-token-compiler
-description: Translates JSON design tokens into SwiftUI code. Use when updating colors, typography, or spacing in the Design System, and when synchronizing brand-colors.json with Swift extensions.
+description: Use when updating design system colors or typography to regenerate SwiftUI code from JSON automatically
 ---
 
 # Design Token Compiler
 
-You are a bridge between Design and Engineering.
+Syncs `brand-colors.json` and `typography.json` with SwiftUI code. When designers update JSON, the skill regenerates Color extensions and Font definitions.
 
-## Core Mandates
+## One-Way Sync: JSON → Swift
 
-### 1. Token Source of Truth
-- The files `Resources/Data/brand-colors.json` and `typography.json` are the sources of truth.
-- Do not define colors directly in SwiftUI Views.
+**Truth Source:** `Docs/Product/Design/Assets/brand-colors.json`
+**Generated Code:** `Modules/DesignSystem/Sources/DesignSystem/Tokens/Colors.swift`
 
-### 2. Code Generation
-- Generate SwiftUI extensions like `extension Color { static let brandPrimary = Color("...") }`.
-- Ensure dark mode support is handled via Asset Catalogs or semantic token mapping.
+Never edit the Swift file directly - edit JSON, regenerate.
 
-### 3. Component Hierarchy
-- Follow the "Tier System":
-  - **Tier 1 (Tokens)**: Colors, Fonts, Spacing.
-  - **Tier 2 (Atoms)**: Buttons, Labels.
-  - **Tier 3 (Molecules)**: Item Cards, Input Rows.
+## JSON Structure
+
+### Colors
+
+```json
+{
+  "tier1_casual": {
+    "primary": "#4CAF50",
+    "description": "Bright green for playful Tier 1 dashboard"
+  },
+  "tier2_hustler": {
+    "primary": "#2E7D32",
+    "description": "Standard green for Tier 2"
+  },
+  "neutral_background": "#F5F5F5",
+  "neutral_card": "#FFFFFF"
+}
+```
+
+### Typography
+
+```json
+{
+  "hero": {
+    "font": "SF Pro Rounded",
+    "size": 48,
+    "weight": "bold",
+    "lineHeight": 1.2
+  },
+  "section": {
+    "font": "SF Pro Rounded",
+    "size": 20,
+    "weight": "semibold"
+  }
+}
+```
+
+## Generated Swift Code
+
+After compilation, `Colors.swift` looks like:
+
+```swift
+extension Color {
+    static var tier1Casual: Color {
+        Color(red: 0.298, green: 0.796, blue: 0.298)  // #4CAF50
+    }
+
+    static var tier2Hustler: Color {
+        Color(red: 0.180, green: 0.494, blue: 0.196)  // #2E7D32
+    }
+}
+
+extension ShapeStyle where Self == Color {
+    static var primaryGreen: Color { .tier1Casual }
+}
+```
 
 ## Workflow
 
-1. **Update**: When the user changes `brand-colors.json`, offer to regenerate the `DesignSystem/Tokens.swift` file.
-2. **Standardization**: When the user asks for a "Blue button," suggest using a Tier 2 component instead of raw styling.
+1. **Designer updates JSON** (e.g., tier colors, hero font size)
+2. **Run compiler:** `swift Scripts/build/generate-tokens.swift`
+3. **Verify Swift files updated**
+4. **Commit both JSON + Swift files**
+
+## Build Script Example
+
+```swift
+#!/usr/bin/env swift
+
+import Foundation
+
+func generateColors(from json: [String: Any]) {
+    var swiftCode = """
+    // AUTO-GENERATED: Do not edit directly. Update brand-colors.json instead.
+
+    import SwiftUI
+
+    extension Color {
+    """
+
+    for (name, config) in json {
+        let hex = config["primary"] as? String ?? "#000000"
+        let camelCase = toCamelCase(name)
+        swiftCode += """
+
+            static var \(camelCase): Color {
+                Color(hex: "\(hex)")
+            }
+        """
+    }
+
+    swiftCode += "\n}\n"
+
+    try? swiftCode.write(
+        toFile: "Modules/DesignSystem/Sources/DesignSystem/Tokens/Colors.swift",
+        atomically: true,
+        encoding: .utf8
+    )
+}
+```
+
+## Usage in Code
+
+```swift
+import DesignSystem
+
+struct DashboardView: View {
+    var body: some View {
+        VStack {
+            Text("Net Profit")
+                .foregroundColor(.tier1Casual)
+        }
+        .background(.neutralCard)
+    }
+}
+```
+
+## When to Use This Skill
+
+- ✅ Color palette changed
+- ✅ Typography scale updated
+- ✅ New tier colors added
+- ✅ Font weights adjusted
+- ❌ Don't manually edit generated Swift files
+
+## One-Way Sync Benefits
+
+| Benefit | Impact |
+|---------|--------|
+| Single source of truth | Designers control colors, devs implement |
+| Automated generation | No manual transcription errors |
+| Type-safe in Swift | Compile-time color checking |
+| Easy audits | All colors in one JSON file |
+| Design consistency | Colors always match specs |
+

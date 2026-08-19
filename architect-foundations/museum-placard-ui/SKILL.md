@@ -1,3 +1,8 @@
+---
+name: museum-placard-ui
+description: Generates high-fidelity "Museum Placard" / "Botanical Triage" style detail windows — dual-font serif system, warm academic palette, structured metric-card data grids, and a confidence/sources footer. Use when building detail views for collection, taxonomy, or specimen-style data.
+---
+
 # Skill: Museum Placard UI Component Generator
 
 This skill is designed to generate and implement high-fidelity "Museum Placard" or "Botanical Triage" style detail windows. These are characterized by a clean, academic, yet premium aesthetic using a dual-font system, specific color palettes, and structured data grids.

@@ -1,5 +1,6 @@
 ---
 name: app-review-exemplar
+description: Reference for Apple App Review guidelines with exemplary financial dashboard patterns (accuracy, disclosure, compliance). Use when reviewing an app against App Store review criteria or modeling review-ready UI patterns.
 purpose: Official Apple App Review Guidelines reference with exemplary financial dashboard patterns
 keywords:
   - review

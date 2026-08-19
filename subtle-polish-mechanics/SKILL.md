@@ -1,6 +1,7 @@
 ---
 title: "Micro-Interaction Polish"
 name: subtle-polish-mechanics
+description: Delightful, purposeful micro-interactions and subtle animations that add polish without friction. Use when refining UI motion, button feedback, empty states, or transition details.
 purpose: "Delightful, purposeful micro-interactions and subtle animations"
 superpowers: writing-skills
 keywords:

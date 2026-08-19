@@ -1,6 +1,9 @@
 ---
 name: flipscale-precision-guard
-description: Enforces "No-Matter-What" architectural invariants: Decimal-only for money, zero SwiftUI in Services, and unified UserTier terminology. Use to fix precision drift and architectural leaks.
+description: >-
+  Enforces "No-Matter-What" architectural invariants — Decimal-only for money,
+  zero SwiftUI in Services, and unified UserTier terminology. Use to fix
+  precision drift and architectural leaks.
 ---
 
 # FlipScale Precision Guard
