@@ -151,6 +151,9 @@ jobs:
       - name: Preflight orchestrator
         id: preflight
         shell: bash
+        env:
+          MODE: ${{ inputs.mode }}
+          OPEN_PR: ${{ inputs.open_pr }}
         run: |
           if command -v hermes >/dev/null 2>&1; then
             echo "hermes_bin=$(command -v hermes)" >> "$GITHUB_OUTPUT"
@@ -163,6 +166,11 @@ jobs:
 
           if ! command -v git >/dev/null 2>&1; then
             echo "::error::git is required"
+            exit 2
+          fi
+
+          if [[ "$MODE" == "apply" && "$OPEN_PR" == "true" ]] && ! command -v gh >/dev/null 2>&1; then
+            echo "::error::GitHub CLI (gh) is required for apply mode with open_pr=true."
             exit 2
           fi
 
