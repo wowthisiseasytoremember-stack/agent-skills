@@ -2,7 +2,7 @@
 
 Repository discovery and agent-context hardening for GitHub repositories.
 
-This `agent-skills` repository enables the deterministic PR lint through `.github/workflows/repo-context-ci.yml` as its own canary consumer.
+This `agent-skills` repository enables the deterministic PR lint through `.github/workflows/repo-context-ci.yml` as its own read-only canary consumer.
 
 ## Files
 
