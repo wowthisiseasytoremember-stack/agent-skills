@@ -25,6 +25,10 @@ on:
         default: true
         type: boolean
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   harden:
     uses: wowthisiseasytoremember-stack/agent-skills/.github/workflows/repo-context-hardening.yml@master
