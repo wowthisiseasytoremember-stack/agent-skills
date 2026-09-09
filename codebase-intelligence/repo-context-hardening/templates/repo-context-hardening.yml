@@ -1,6 +1,7 @@
 name: Repo Context Hardening
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       mode:
@@ -26,11 +27,25 @@ on:
         type: boolean
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
-  harden:
+  pr-lint:
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+    uses: wowthisiseasytoremember-stack/agent-skills/.github/workflows/repo-context-hardening.yml@master
+    with:
+      mode: lint
+      target_path: "."
+      strict: false
+      open_pr: false
+
+  manual:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    permissions:
+      contents: write
+      pull-requests: write
     uses: wowthisiseasytoremember-stack/agent-skills/.github/workflows/repo-context-hardening.yml@master
     with:
       mode: ${{ inputs.mode }}
