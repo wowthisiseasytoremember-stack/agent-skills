@@ -1,0 +1,16 @@
+name: Repo Context CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  context-lint:
+    uses: ./.github/workflows/repo-context-hardening.yml
+    with:
+      mode: lint
+      target_path: "."
+      strict: false
+      open_pr: false
