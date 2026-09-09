@@ -161,8 +161,11 @@ def likely_local_path(token: str) -> bool:
 
 
 def check_doc_references(root: Path, findings: list[Finding]) -> None:
-    doc_names = {"AGENTS.md", "AGENT.md", "CLAUDE.md", "README.md"}
-    docs = list(walk_files(root, names=doc_names))
+    # Validate the actual agent-context layer, not every vendored/package README.
+    docs = list(walk_files(root, names={"AGENTS.md", "AGENT.md", "CLAUDE.md"}))
+    root_readme = root / "README.md"
+    if root_readme.is_file():
+        docs.append(root_readme)
     docs_dir = root / "docs"
     if docs_dir.is_dir():
         docs.extend(walk_files(docs_dir, suffix=".md"))
