@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Deterministic CI checks for repository agent-context hygiene.
 
-This is deliberately conservative: it validates discoverability and reference
-integrity without pretending it can prove architectural truth. The semantic
-repo-context-hardening skill does that part.
+This is deliberately conservative: it validates discoverability, instruction
+ancestry, and reference integrity without pretending it can prove architectural
+truth. The semantic repo-context-hardening skill does that part.
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
 
+INSTRUCTION_FILES = {"AGENTS.md", "AGENT.md", "CLAUDE.md"}
 ROOT_INSTRUCTION_CANDIDATES = (
     "AGENTS.md",
     "AGENT.md",
@@ -79,62 +80,125 @@ def walk_files(root: Path, names: set[str] | None = None, suffix: str | None = N
             yield base_path / name
 
 
-def rel(path: Path, root: Path) -> str:
+def rel(path: Path, repo_root: Path) -> str:
     try:
-        return path.relative_to(root).as_posix()
+        return path.relative_to(repo_root).as_posix()
     except ValueError:
         return path.as_posix()
 
 
-def root_instruction_files(root: Path) -> list[Path]:
-    found = []
-    for candidate in ROOT_INSTRUCTION_CANDIDATES:
-        path = root / candidate
+def find_git_root(target: Path) -> Path | None:
+    current = target.resolve()
+    for candidate in (current, *current.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return None
+
+
+def path_chain(repo_root: Path, target: Path) -> list[Path]:
+    repo_root = repo_root.resolve()
+    target = target.resolve()
+    try:
+        relative = target.relative_to(repo_root)
+    except ValueError:
+        return [target]
+
+    chain = [repo_root]
+    current = repo_root
+    for part in relative.parts:
+        current = current / part
+        chain.append(current)
+    return chain
+
+
+def instruction_channels_at(directory: Path) -> list[Path]:
+    found: list[Path] = []
+    for name in ROOT_INSTRUCTION_CANDIDATES:
+        path = directory / name
         if path.is_file():
             found.append(path)
-    cursor_rules = root / ".cursor" / "rules"
+    cursor_rules = directory / ".cursor" / "rules"
     if cursor_rules.is_dir() and any(cursor_rules.iterdir()):
         found.append(cursor_rules)
     return found
 
 
-def check_instruction_presence(root: Path, findings: list[Finding]) -> None:
-    found = root_instruction_files(root)
+def applicable_instruction_channels(repo_root: Path, target: Path) -> list[Path]:
+    found: list[Path] = []
+    for directory in path_chain(repo_root, target):
+        found.extend(instruction_channels_at(directory))
+    return found
+
+
+def check_scope(target: Path, repo_root: Path | None, findings: list[Finding]) -> Path:
+    if repo_root is None:
+        findings.append(
+            Finding(
+                "warning",
+                "GIT_ROOT_UNKNOWN",
+                "No .git boundary was found in the target or its ancestors; treating the target as the workspace root.",
+            )
+        )
+        return target
+
+    if target != repo_root:
+        findings.append(
+            Finding(
+                "notice",
+                "NESTED_TARGET",
+                f"Target is nested inside repository root: {rel(target, repo_root)}",
+            )
+        )
+    return repo_root
+
+
+def check_instruction_presence(repo_root: Path, target: Path, findings: list[Finding]) -> list[Path]:
+    found = applicable_instruction_channels(repo_root, target)
     if not found:
         findings.append(
             Finding(
                 "error",
-                "NO_ROOT_AGENT_CONTEXT",
-                "No root agent instruction channel found (AGENTS.md, CLAUDE.md, copilot instructions, .clinerules, or .cursor/rules).",
+                "NO_APPLICABLE_AGENT_CONTEXT",
+                "No applicable agent instruction channel found from repository/workspace root to target (AGENTS.md, CLAUDE.md, copilot instructions, .clinerules, or .cursor/rules).",
             )
         )
-        return
+        return []
+
     findings.append(
         Finding(
             "notice",
-            "ROOT_CONTEXT",
-            "Root instruction channel(s): " + ", ".join(rel(p, root) for p in found),
+            "CONTEXT_ANCESTRY",
+            "Applicable instruction channel(s), outermost to innermost: "
+            + " -> ".join(rel(p, repo_root) for p in found),
         )
     )
+    return found
 
 
-def check_instruction_sizes(root: Path, findings: list[Finding]) -> None:
-    instruction_names = {"AGENTS.md", "AGENT.md", "CLAUDE.md"}
-    for path in walk_files(root, names=instruction_names):
+def instruction_files_to_check(repo_root: Path, target: Path, applicable: list[Path]) -> list[Path]:
+    files: set[Path] = {p for p in applicable if p.is_file()}
+    for path in walk_files(target, names=INSTRUCTION_FILES):
+        files.add(path)
+    return sorted(files)
+
+
+def check_instruction_sizes(repo_root: Path, target: Path, applicable: list[Path], findings: list[Finding]) -> None:
+    for path in instruction_files_to_check(repo_root, target, applicable):
         try:
             lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
         except OSError as exc:
-            findings.append(Finding("warning", "READ_FAILED", str(exc), rel(path, root)))
+            findings.append(Finding("warning", "READ_FAILED", str(exc), rel(path, repo_root)))
             continue
-        is_root = path.parent == root
-        advisory = 150 if is_root else 60
+
+        is_repo_root = path.parent == repo_root
+        advisory = 150 if is_repo_root else 60
         if len(lines) > advisory:
             findings.append(
                 Finding(
                     "warning",
                     "CONTEXT_SIZE",
                     f"{len(lines)} lines; advisory target is <= {advisory}. Split only if local scope would become clearer.",
-                    rel(path, root),
+                    rel(path, repo_root),
                 )
             )
 
@@ -160,106 +224,121 @@ def likely_local_path(token: str) -> bool:
     return "/" in token or "." in Path(token).name
 
 
-def check_doc_references(root: Path, findings: list[Finding]) -> None:
-    # Validate the actual agent-context layer, not every vendored/package README.
-    docs = list(walk_files(root, names={"AGENTS.md", "AGENT.md", "CLAUDE.md"}))
-    root_readme = root / "README.md"
-    if root_readme.is_file():
-        docs.append(root_readme)
-    docs_dir = root / "docs"
-    if docs_dir.is_dir():
-        docs.extend(walk_files(docs_dir, suffix=".md"))
+def resolves_local_reference(doc: Path, token: str, repo_root: Path) -> bool:
+    p = Path(token)
+    candidates: list[Path] = []
 
-    seen: set[Path] = set()
-    for doc in docs:
-        if doc in seen or not doc.is_file():
+    if token.startswith(("./", "../")):
+        candidates.append((doc.parent / p).resolve())
+    else:
+        # Agent docs commonly use either file-relative or repository-root-relative
+        # paths. Accept either rather than inventing one universal convention.
+        candidates.extend(((doc.parent / p).resolve(), (repo_root / p).resolve()))
+
+    repo_root_resolved = repo_root.resolve()
+    for candidate in candidates:
+        try:
+            candidate.relative_to(repo_root_resolved)
+        except ValueError:
             continue
-        seen.add(doc)
+        if candidate.exists():
+            return True
+    return False
+
+
+def docs_to_check(repo_root: Path, target: Path, applicable: list[Path]) -> list[Path]:
+    docs: set[Path] = {p for p in applicable if p.is_file()}
+    docs.update(walk_files(target, names=INSTRUCTION_FILES))
+
+    root_readme = repo_root / "README.md"
+    if root_readme.is_file():
+        docs.add(root_readme)
+
+    docs_dir = repo_root / "docs"
+    if docs_dir.is_dir():
+        docs.update(walk_files(docs_dir, suffix=".md"))
+
+    return sorted(docs)
+
+
+def check_doc_references(repo_root: Path, target: Path, applicable: list[Path], findings: list[Finding]) -> None:
+    for doc in docs_to_check(repo_root, target, applicable):
         text = doc.read_text(encoding="utf-8", errors="replace")
         lines = text.splitlines()
 
         candidates: list[tuple[str, int, str]] = []
         for lineno, line in enumerate(lines, 1):
             for match in MD_LINK_RE.finditer(line):
-                target = normalize_markdown_target(match.group(1))
-                if target:
-                    candidates.append((target, lineno, "markdown-link"))
+                local_target = normalize_markdown_target(match.group(1))
+                if local_target:
+                    candidates.append((local_target, lineno, "markdown-link"))
             for match in BACKTICK_PATH_RE.finditer(line):
-                target = match.group(1)
-                if likely_local_path(target):
-                    candidates.append((target, lineno, "backtick-path"))
+                local_target = match.group(1)
+                if likely_local_path(local_target):
+                    candidates.append((local_target, lineno, "backtick-path"))
 
-        for target, lineno, kind in candidates:
-            p = Path(target)
-            resolved = (doc.parent / p).resolve() if target.startswith(("./", "../")) else (root / p).resolve()
-            try:
-                resolved.relative_to(root.resolve())
-            except ValueError:
+        for local_target, lineno, kind in candidates:
+            if resolves_local_reference(doc, local_target, repo_root):
                 continue
-            if not resolved.exists():
-                level = "error" if kind == "markdown-link" else "warning"
-                findings.append(
-                    Finding(
-                        level,
-                        "BROKEN_DOC_REFERENCE",
-                        f"Referenced local path does not exist: {target}",
-                        rel(doc, root),
-                        lineno,
-                    )
+            level = "error" if kind == "markdown-link" else "warning"
+            findings.append(
+                Finding(
+                    level,
+                    "BROKEN_DOC_REFERENCE",
+                    f"Referenced local path does not exist from document or repository root: {local_target}",
+                    rel(doc, repo_root),
+                    lineno,
                 )
+            )
 
 
-def check_context_ancestry(root: Path, findings: list[Finding]) -> None:
-    nested = []
-    for path in walk_files(root, names={"AGENTS.md", "AGENT.md", "CLAUDE.md"}):
-        if path.parent != root:
-            nested.append(rel(path, root))
+def check_nested_context(repo_root: Path, target: Path, applicable: list[Path], findings: list[Finding]) -> None:
+    applicable_files = {p for p in applicable if p.is_file()}
+    nested = [
+        path
+        for path in walk_files(target, names=INSTRUCTION_FILES)
+        if path not in applicable_files
+    ]
     if nested:
         findings.append(
             Finding(
                 "notice",
-                "NESTED_CONTEXT",
-                f"Found {len(nested)} nested instruction file(s): " + ", ".join(sorted(nested)[:12]) + (" …" if len(nested) > 12 else ""),
-            )
-        )
-
-
-def check_git_boundary(root: Path, findings: list[Finding]) -> None:
-    if not (root / ".git").exists():
-        findings.append(
-            Finding(
-                "warning",
-                "ROOT_NOT_GIT",
-                "Selected root does not contain .git; confirm CI target_path is the intended repository/workspace boundary.",
+                "DESCENDANT_CONTEXT",
+                f"Found {len(nested)} deeper instruction file(s) below target: "
+                + ", ".join(rel(p, repo_root) for p in sorted(nested)[:12])
+                + (" …" if len(nested) > 12 else ""),
             )
         )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--root", default=".", help="Repository/workspace root to lint")
+    parser.add_argument("--root", default=".", help="Target repository/workspace path to lint")
     parser.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     parser.add_argument("--json", dest="json_path", help="Write machine-readable report")
     args = parser.parse_args()
 
-    root = Path(args.root).expanduser().resolve()
-    if not root.exists() or not root.is_dir():
-        print(f"::error::ROOT_MISSING: target root does not exist: {root}")
+    target = Path(args.root).expanduser().resolve()
+    if not target.exists() or not target.is_dir():
+        print(f"::error::ROOT_MISSING: target path does not exist: {target}")
         return 2
 
     findings: list[Finding] = []
-    check_git_boundary(root, findings)
-    check_instruction_presence(root, findings)
-    check_instruction_sizes(root, findings)
-    check_context_ancestry(root, findings)
-    check_doc_references(root, findings)
+    discovered_git_root = find_git_root(target)
+    repo_root = check_scope(target, discovered_git_root, findings)
+    applicable = check_instruction_presence(repo_root, target, findings)
+    check_instruction_sizes(repo_root, target, applicable, findings)
+    check_nested_context(repo_root, target, applicable, findings)
+    check_doc_references(repo_root, target, applicable, findings)
 
     for finding in findings:
         emit(finding)
 
     report = {
-        "root": str(root),
+        "target": str(target),
+        "repository_root": str(repo_root),
         "strict": args.strict,
+        "applicable_instruction_channels": [rel(p, repo_root) for p in applicable],
         "counts": {
             "error": sum(f.level == "error" for f in findings),
             "warning": sum(f.level == "warning" for f in findings),
