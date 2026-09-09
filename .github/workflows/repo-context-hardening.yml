@@ -129,9 +129,6 @@ jobs:
     if: ${{ inputs.mode == 'audit' || inputs.mode == 'apply' }}
     needs: lint
     runs-on: self-hosted
-    permissions:
-      contents: write
-      pull-requests: write
 
     steps:
       - name: Check out target repository
