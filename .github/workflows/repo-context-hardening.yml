@@ -1,0 +1,293 @@
+name: Repo Context Hardening
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "lint = deterministic checks, audit = AI read-only pass, apply = AI fixes + draft PR"
+        required: true
+        default: lint
+        type: choice
+        options:
+          - lint
+          - audit
+          - apply
+      target_path:
+        description: "Path inside the checked-out repository to treat as the target"
+        required: true
+        default: "."
+        type: string
+      strict:
+        description: "Fail lint mode on warnings as well as errors"
+        required: true
+        default: false
+        type: boolean
+      open_pr:
+        description: "In apply mode, push changes and open a draft PR"
+        required: true
+        default: true
+        type: boolean
+
+  workflow_call:
+    inputs:
+      mode:
+        description: "lint, audit, or apply"
+        required: false
+        default: lint
+        type: string
+      target_path:
+        description: "Path inside the caller repository"
+        required: false
+        default: "."
+        type: string
+      strict:
+        description: "Fail lint mode on warnings"
+        required: false
+        default: false
+        type: boolean
+      open_pr:
+        description: "In apply mode, push changes and open a draft PR"
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: repo-context-hardening-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  lint:
+    name: Deterministic context lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out target repository
+        uses: actions/checkout@v4
+        with:
+          path: target
+          fetch-depth: 0
+
+      - name: Check out context-hardening skill
+        uses: actions/checkout@v4
+        with:
+          repository: wowthisiseasytoremember-stack/agent-skills
+          ref: master
+          path: _repo-context-hardening
+          fetch-depth: 1
+
+      - name: Validate mode
+        shell: bash
+        env:
+          MODE: ${{ inputs.mode }}
+        run: |
+          case "$MODE" in
+            lint|audit|apply) ;;
+            *) echo "::error::mode must be lint, audit, or apply"; exit 2 ;;
+          esac
+
+      - name: Run context lint
+        id: context_lint
+        shell: bash
+        env:
+          MODE: ${{ inputs.mode }}
+          TARGET_PATH: ${{ inputs.target_path }}
+          STRICT: ${{ inputs.strict }}
+        run: |
+          set +e
+          ARGS=(
+            --root "$GITHUB_WORKSPACE/target/$TARGET_PATH"
+            --json "$GITHUB_WORKSPACE/repo-context-lint.json"
+          )
+          if [[ "$STRICT" == "true" ]]; then
+            ARGS+=(--strict)
+          fi
+
+          python "$GITHUB_WORKSPACE/_repo-context-hardening/codebase-intelligence/repo-context-hardening/scripts/context_lint.py" "${ARGS[@]}"
+          rc=$?
+          set -e
+
+          # lint mode is a CI gate. audit/apply use the findings as recon input,
+          # so semantic hardening must still be allowed to run.
+          if [[ "$MODE" == "lint" ]]; then
+            exit "$rc"
+          fi
+          exit 0
+
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-context-lint-${{ github.run_id }}
+          path: repo-context-lint.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+  agent:
+    name: Semantic repository hardening
+    if: ${{ inputs.mode == 'audit' || inputs.mode == 'apply' }}
+    needs: lint
+    runs-on: self-hosted
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Check out target repository
+        uses: actions/checkout@v4
+        with:
+          path: target
+          fetch-depth: 0
+
+      - name: Check out context-hardening skill
+        uses: actions/checkout@v4
+        with:
+          repository: wowthisiseasytoremember-stack/agent-skills
+          ref: master
+          path: _repo-context-hardening
+          fetch-depth: 1
+
+      - name: Preflight orchestrator
+        id: preflight
+        shell: bash
+        env:
+          MODE: ${{ inputs.mode }}
+          OPEN_PR: ${{ inputs.open_pr }}
+        run: |
+          if command -v hermes >/dev/null 2>&1; then
+            echo "hermes_bin=$(command -v hermes)" >> "$GITHUB_OUTPUT"
+          elif [[ -x "$HOME/.local/bin/hermes" ]]; then
+            echo "hermes_bin=$HOME/.local/bin/hermes" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Hermes is not installed for this self-hosted runner user."
+            exit 2
+          fi
+
+          if ! command -v git >/dev/null 2>&1; then
+            echo "::error::git is required"
+            exit 2
+          fi
+
+          if [[ "$MODE" == "apply" && "$OPEN_PR" == "true" ]] && ! command -v gh >/dev/null 2>&1; then
+            echo "::error::GitHub CLI (gh) is required for apply mode with open_pr=true."
+            exit 2
+          fi
+
+      - name: Run repo-context-hardening skill
+        shell: bash
+        env:
+          HERMES_BIN: ${{ steps.preflight.outputs.hermes_bin }}
+          MODE: ${{ inputs.mode }}
+          TARGET_PATH: ${{ inputs.target_path }}
+        run: |
+          set -euo pipefail
+          TARGET="$GITHUB_WORKSPACE/target/$TARGET_PATH"
+          SKILL="$GITHUB_WORKSPACE/_repo-context-hardening/codebase-intelligence/repo-context-hardening/SKILL.md"
+
+          if [[ ! -d "$TARGET" ]]; then
+            echo "::error::Target path does not exist: $TARGET"
+            exit 2
+          fi
+
+          PROMPT_FILE="$RUNNER_TEMP/repo-context-hardening-prompt.txt"
+          cat > "$PROMPT_FILE" <<EOF
+          You are the primary orchestrator for a repository-context hardening pass.
+
+          Read and follow this skill exactly:
+          $SKILL
+
+          MODE: $MODE
+          TARGET PATH: $TARGET
+          CALLER REPOSITORY: $GITHUB_REPOSITORY
+
+          Runtime instructions:
+          - Begin with the skill's scope/ancestry gate. Do not assume the checkout root is the only relevant context boundary.
+          - You have access to cheap, limited-context YOLO-auto worker capacity through the configured MCP/delegation environment when available. Use it for bounded read-only reconnaissance. Prefer several narrow workers over one broad worker. Give exact paths and evidence-only questions.
+          - Keep architecture synthesis, canonical-source decisions, contradiction resolution, protected-surface classification, and final documentation decisions in this orchestrator.
+          - Do not hardcode a YOLO-auto model name or API credential.
+          - In audit mode, make NO repository edits.
+          - In apply mode, edit only what the skill permits. Do not commit, push, merge, or deploy; the workflow owns Git operations and will create a reviewable draft PR.
+          - Never alter operator-owned decisions simply to make state look consistent.
+          - If evidence is incomplete, write UNKNOWN rather than guessing.
+          - Produce the skill's compact final report at the end.
+          EOF
+
+          cd "$TARGET"
+          "$HERMES_BIN" chat --yolo -q "$(cat "$PROMPT_FILE")" | tee "$GITHUB_WORKSPACE/repo-context-agent-report.txt"
+
+      - name: Enforce audit read-only mode
+        if: ${{ inputs.mode == 'audit' }}
+        shell: bash
+        run: |
+          if [[ -n "$(git -C "$GITHUB_WORKSPACE/target" status --porcelain)" ]]; then
+            echo "::error::Audit mode modified the repository. Changes are shown below."
+            git -C "$GITHUB_WORKSPACE/target" status --short
+            git -C "$GITHUB_WORKSPACE/target" diff -- . || true
+            exit 1
+          fi
+
+      - name: Validate apply result
+        if: ${{ inputs.mode == 'apply' }}
+        shell: bash
+        env:
+          TARGET_PATH: ${{ inputs.target_path }}
+        run: |
+          python "$GITHUB_WORKSPACE/_repo-context-hardening/codebase-intelligence/repo-context-hardening/scripts/context_lint.py" \
+            --root "$GITHUB_WORKSPACE/target/$TARGET_PATH" \
+            --json "$GITHUB_WORKSPACE/repo-context-post-apply.json"
+
+      - name: Create reviewable draft PR
+        if: ${{ inputs.mode == 'apply' && inputs.open_pr }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/target"
+
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "No repository changes were needed."
+            exit 0
+          fi
+
+          BASE_BRANCH="${{ github.event.repository.default_branch }}"
+          if [[ -z "$BASE_BRANCH" || "$BASE_BRANCH" == "null" ]]; then
+            BASE_BRANCH="$(git symbolic-ref --short refs/remotes/origin/HEAD | sed 's#^origin/##')"
+          fi
+
+          BRANCH="repo-context-hardening/run-${GITHUB_RUN_ID}"
+          git config user.name "repo-context-hardening[bot]"
+          git config user.email "repo-context-hardening[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "docs: harden repository agent context"
+          git push origin "HEAD:$BRANCH"
+
+          BODY_FILE="$RUNNER_TEMP/repo-context-pr-body.md"
+          cat > "$BODY_FILE" <<EOF
+          Automated repository-context hardening pass.
+
+          - Mode: apply
+          - Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+          - Changes are intentionally opened as a draft for operator review.
+          - No deploy or merge was performed.
+          EOF
+
+          gh pr create \
+            --draft \
+            --base "$BASE_BRANCH" \
+            --head "$BRANCH" \
+            --title "docs: harden repository agent context" \
+            --body-file "$BODY_FILE"
+
+      - name: Upload semantic reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-context-agent-${{ github.run_id }}
+          path: |
+            repo-context-agent-report.txt
+            repo-context-post-apply.json
+          if-no-files-found: ignore
+          retention-days: 14

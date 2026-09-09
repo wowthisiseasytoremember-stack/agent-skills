@@ -1,0 +1,54 @@
+name: Repo Context Hardening
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "lint, audit, or apply"
+        required: true
+        default: lint
+        type: choice
+        options: [lint, audit, apply]
+      target_path:
+        description: "Path inside this repository"
+        required: true
+        default: "."
+        type: string
+      strict:
+        description: "Fail lint mode on warnings"
+        required: true
+        default: false
+        type: boolean
+      open_pr:
+        description: "In apply mode, open a draft PR"
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  pr-lint:
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+    uses: wowthisiseasytoremember-stack/agent-skills/.github/workflows/repo-context-hardening.yml@master
+    with:
+      mode: lint
+      target_path: "."
+      strict: false
+      open_pr: false
+
+  manual:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: wowthisiseasytoremember-stack/agent-skills/.github/workflows/repo-context-hardening.yml@master
+    with:
+      mode: ${{ inputs.mode }}
+      target_path: ${{ inputs.target_path }}
+      strict: ${{ inputs.strict }}
+      open_pr: ${{ inputs.open_pr }}
