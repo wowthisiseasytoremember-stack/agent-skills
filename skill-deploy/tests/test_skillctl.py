@@ -2,6 +2,7 @@ import importlib.util
 import json
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 
@@ -74,13 +75,16 @@ class SkillCtlTests(unittest.TestCase):
             self.m.fingerprint(installed), self.m.fingerprint(self.m.skill_path(entry))
         )
 
-    def test_package_is_deterministic(self):
+    def test_package_is_deterministic_and_rooted_correctly(self):
         _, entry = self.entry()
         a = self.root / "a.zip"
         b = self.root / "b.zip"
         self.m.build_zip("context-clear", entry, a)
         self.m.build_zip("context-clear", entry, b)
         self.assertEqual(a.read_bytes(), b.read_bytes())
+        with zipfile.ZipFile(a) as zf:
+            self.assertIn("SKILL.md", zf.namelist())
+            self.assertNotIn("context-clear/SKILL.md", zf.namelist())
 
     def test_cloud_plan_switches_after_id(self):
         _, entry = self.entry()
