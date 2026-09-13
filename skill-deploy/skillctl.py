@@ -218,7 +218,7 @@ def build_zip(name: str, entry: dict[str, Any], output: Path) -> Path:
     epoch = (1980, 1, 1, 0, 0, 0)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         for p in iter_files(src):
-            rel = (Path(name) / p.relative_to(src)).as_posix()
+            rel = p.relative_to(src).as_posix()
             info = zipfile.ZipInfo(rel, date_time=epoch)
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o644 << 16
