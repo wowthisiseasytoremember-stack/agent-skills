@@ -1,0 +1,36 @@
+{
+  "schema": "context-clear/v1",
+  "checkpoint_id": "20260913T060000Z-biotrack-repo-control",
+  "created_at": "2026-09-13T06:00:00Z",
+  "project": "BioTrack + universal repository control",
+  "resume": "Leave the active BioTrack provenance audit alone; when process work resumes, continue from the lightweight GitHub-native repo-control proposal preserved in CONTEXT_CLEAR.md.",
+  "status": "verified",
+  "content_sha256": "0fc56b455c0000c552a0dd81f98c617798c1d4cf39e4901175e8049d0acbc0b8",
+  "destinations": [
+    {
+      "type": "git",
+      "locator": "wowthisiseasytoremember-stack/agent-skills:context-checkpoints/biotrack/2026/2026-09-13/20260913T060000Z-biotrack-repo-control/CONTEXT_CLEAR.md@3c9e7480ff098da03042f393ac56f1474d00a685",
+      "verified": true,
+      "verification": "GitHub returned commit 3c9e7480ff098da03042f393ac56f1474d00a685 for the checkpoint write and the file was fetched back from that exact commit.",
+      "revision": "3c9e7480ff098da03042f393ac56f1474d00a685",
+      "visibility": "public"
+    }
+  ],
+  "redactions": [
+    "credentials/tokens/passwords",
+    "unrelated personal profile details",
+    "private health/relationship/financial context",
+    "raw conversational chatter not needed for recovery"
+  ],
+  "source_refs": [
+    "wowthisiseasytoremember-stack/biotrack-core#16",
+    "wowthisiseasytoremember-stack/biotrack-core#17",
+    "wowthisiseasytoremember-stack/biotrack-core#18",
+    "wowthisiseasytoremember-stack/aquatrack#1",
+    "wowthisiseasytoremember-stack/ichabod-agent-mailbox#79",
+    "wowthisiseasytoremember-stack/ichabod-agent-mailbox#83",
+    "wowthisiseasytoremember-stack/agent-skills:codebase-intelligence/repo-context-hardening/SKILL.md",
+    "wowthisiseasytoremember-stack/agent-skills:agent-operations/context-clear/SKILL.md"
+  ],
+  "conversation_label": "BioTrack data milestone + universal repo-control design"
+}
