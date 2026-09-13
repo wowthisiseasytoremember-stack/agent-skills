@@ -306,6 +306,10 @@ Adoption per roadmap session. **Don't write custom code for anything the kit cov
 - **L.** Discord Server Subscriptions
 - **M.** Multi-language personas (post-Track A)
 - **N.** Persona marketplace / licensing (post-Track B)
+- **O.** ebay-store content-site spike ??? IF Justin ever builds a content site driving eBay traffic, adopt `/go/` router + Disclosure. Pre-emptive doctrine only.
+- **P.** career/justin-ryan-portfolio as content site ??? runbook/B applies. Quick-win Tier 2 spike if Justin wants to monetize the portfolio (affiliate links in case studies, lead-gen for services).
+- **Q.** aether-bloom / bookmarks aggregation as content + newsletter ??? Tier 2 J expansion with affiliate-layer.
+- **R.** agent-tool-as-product spike ??? speculative; only trigger if Justin ships an external paid agent product (e.g., paid ai-conductor for other developers).
 
 ---
 
@@ -344,3 +348,4 @@ cd ~/Projects/undercontent/vendor/monetization-kit && npm test
 - **v2** (2026-08-19 11:35 UTC) ??? Reordered: Session 1 = AI companion + agency + compliance. Discarded "Build the Revenue Router" advice.
 - **v3** (2026-08-19 11:55 UTC) ??? Critical correction: Luna is real. Session 1 = Track A only (Luna real + AI obscuration); Track B deferred to Tier 2. Real-person compliance doctrine.
 - **v4** (2026-08-19 12:25 UTC) ??? **Kit adoption integrated.** Session 1 narrowed from 5 sub-sections to 6 (with 3 adopting kit wholesale). Effort down from 4-5 hrs to 3-4 hrs. Cherry-pick map per session added. Kit's `runbook/C-fanvue-operator.md` adopted for Session 1C. Kit's `affiliate-layer/` adopted for Session 1F + Session 4.
+- **v4.1** (2026-08-19 12:30 UTC) ??? Portfolio-wide cherry-pick applied across all 9 initiatives (not just Luna/undercontent). Tier 2 expanded F-N ??? F-R with new spikes: O (ebay-store content-site), P (career/portfolio as content site), Q (aether-bloom + bookmarks as content/newsletter), R (agent-tool-as-product). Sessions 1-5 sequence unchanged ??? Tier 2 expansions are conditional spikes only.
