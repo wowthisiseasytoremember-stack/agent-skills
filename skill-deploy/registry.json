@@ -1,0 +1,21 @@
+{
+  "schema": "agent-skills-registry/v1",
+  "skills": {
+    "context-clear": {
+      "path": "agent-operations/context-clear",
+      "aliases": [
+        "/cc",
+        "cc",
+        "context clear"
+      ],
+      "targets": [
+        "codex",
+        "claude",
+        "openai-cloud"
+      ],
+      "cloud": {
+        "skill_id": null
+      }
+    }
+  }
+}
