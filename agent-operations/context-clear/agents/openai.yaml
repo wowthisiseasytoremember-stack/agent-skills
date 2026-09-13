@@ -1,0 +1,4 @@
+interface:
+  display_name: "Context Clear"
+  short_description: "Persist this conversation so it is safe to close"
+  default_prompt: "Use $context-clear to preserve everything execution-critical from this conversation, persist it to a verified durable destination, cold-resume test it, and report CC CLEAR only if the checkpoint is actually safe to resume from."
