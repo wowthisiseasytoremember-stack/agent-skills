@@ -100,6 +100,33 @@ class SkillCtlTests(unittest.TestCase):
         rc = self.m.main(["deploy", "context-clear", "--dry-run"])
         self.assertEqual(rc, 0)
 
+    def test_default_target_dir_resolution(self):
+        home = Path.home()
+        self.assertEqual(self.m.default_target_dir("claude"), home / ".claude" / "skills")
+        self.assertEqual(self.m.default_target_dir("codex"), home / ".codex" / "skills")
+        self.assertEqual(self.m.default_target_dir("hermes"), home / ".hermes" / "skills")
+        self.assertEqual(
+            self.m.default_target_dir("opencode"), home / ".config" / "opencode" / "skills"
+        )
+
+    def test_target_env_overrides(self):
+        import os
+
+        with tempfile.TemporaryDirectory() as td:
+            custom = Path(td)
+            try:
+                os.environ["HERMES_SKILLS_DIR"] = str(custom / "hermes-custom")
+                os.environ["OPENCODE_SKILLS_DIR"] = str(custom / "opencode-custom")
+                self.assertEqual(
+                    self.m.default_target_dir("hermes"), custom / "hermes-custom"
+                )
+                self.assertEqual(
+                    self.m.default_target_dir("opencode"), custom / "opencode-custom"
+                )
+            finally:
+                os.environ.pop("HERMES_SKILLS_DIR", None)
+                os.environ.pop("OPENCODE_SKILLS_DIR", None)
+
 
 if __name__ == "__main__":
     unittest.main()

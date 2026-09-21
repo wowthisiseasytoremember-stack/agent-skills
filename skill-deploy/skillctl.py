@@ -22,6 +22,7 @@ SECRET_PATTERNS = [
     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
 ]
 FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.S)
+KNOWN_LOCAL_TARGETS = ("codex", "claude", "hermes", "opencode")
 
 
 class SkillCtlError(RuntimeError):
@@ -143,6 +144,12 @@ def default_target_dir(target: str) -> Path:
         return codex_home / "skills"
     if target == "claude":
         return Path(os.environ.get("CLAUDE_SKILLS_DIR", home / ".claude" / "skills")).expanduser()
+    if target == "hermes":
+        return Path(os.environ.get("HERMES_SKILLS_DIR", home / ".hermes" / "skills")).expanduser()
+    if target == "opencode":
+        return Path(
+            os.environ.get("OPENCODE_SKILLS_DIR", home / ".config" / "opencode" / "skills")
+        ).expanduser()
     raise SkillCtlError(f"unknown local target: {target}")
 
 
@@ -300,7 +307,7 @@ def command_status(args):
     entry = get_entry(registry, args.name)
     base = validate_skill(args.name, entry)
     local = {}
-    for target in ("codex", "claude"):
+    for target in KNOWN_LOCAL_TARGETS:
         dest = default_target_dir(target) / args.name
         if not dest.is_dir():
             local[target] = {"status": "missing", "destination": str(dest)}
@@ -324,7 +331,7 @@ def command_sync(args):
     entry = get_entry(registry, args.name)
     validate_skill(args.name, entry)
     targets = args.target or [
-        t for t in entry.get("targets", []) if t in {"codex", "claude"}
+        t for t in entry.get("targets", []) if t in KNOWN_LOCAL_TARGETS
     ]
     if not targets:
         raise SkillCtlError("no local targets configured")
@@ -378,7 +385,7 @@ def command_deploy(args):
 
     if not args.cloud_only:
         targets = args.target or [
-            t for t in entry.get("targets", []) if t in {"codex", "claude"}
+            t for t in entry.get("targets", []) if t in KNOWN_LOCAL_TARGETS
         ]
         if targets:
             dest = Path(args.dest).expanduser() if args.dest else None
@@ -419,7 +426,7 @@ def parser() -> argparse.ArgumentParser:
 
     sy = sub.add_parser("sync")
     sy.add_argument("name")
-    sy.add_argument("--target", action="append", choices=["codex", "claude"])
+    sy.add_argument("--target", action="append", choices=list(KNOWN_LOCAL_TARGETS))
     sy.add_argument("--dest", help="override skills root; mainly for testing or custom agents")
     sy.add_argument("--dry-run", action="store_true")
     sy.set_defaults(func=command_sync)
@@ -438,7 +445,7 @@ def parser() -> argparse.ArgumentParser:
 
     dep = sub.add_parser("deploy")
     dep.add_argument("name")
-    dep.add_argument("--target", action="append", choices=["codex", "claude"])
+    dep.add_argument("--target", action="append", choices=list(KNOWN_LOCAL_TARGETS))
     dep.add_argument("--dest", help="override skills root for local/server installs")
     dep.add_argument("--dry-run", action="store_true")
     mode = dep.add_mutually_exclusive_group()
