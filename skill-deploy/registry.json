@@ -1,21 +1,213 @@
 {
   "schema": "agent-skills-registry/v1",
   "skills": {
+    "citation-management": {
+      "aliases": [
+        "citation-management",
+        "bibtex"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "vendor/scientific-skills/citation-management",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
     "context-clear": {
-      "path": "agent-operations/context-clear",
       "aliases": [
         "/cc",
         "cc",
         "context clear"
       ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "agent-operations/context-clear",
       "targets": [
         "codex",
         "claude",
         "openai-cloud"
+      ]
+    },
+    "diagram-design": {
+      "aliases": [
+        "diagram-design",
+        "diagram"
       ],
       "cloud": {
         "skill_id": null
-      }
+      },
+      "path": "vendor/diagram-design",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "execution-contract": {
+      "aliases": [
+        "execution-contract",
+        "exec-contract"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "agent-operations/execution-contract",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "geopandas": {
+      "aliases": [
+        "geopandas",
+        "geospatial"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "vendor/scientific-skills/geopandas",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "last30days": {
+      "aliases": [
+        "last30days",
+        "research-recent"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "vendor/last30days",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "literature-review": {
+      "aliases": [
+        "literature-review",
+        "lit-review"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "vendor/scientific-skills/literature-review",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "minimality-gate": {
+      "aliases": [
+        "minimality-gate",
+        "ponytail"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "agent-operations/minimality-gate",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "paper-lookup": {
+      "aliases": [
+        "paper-lookup",
+        "scholar-search"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "vendor/scientific-skills/paper-lookup",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "scientific-visualization": {
+      "aliases": [
+        "scientific-visualization",
+        "sci-vis"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "vendor/scientific-skills/scientific-visualization",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "scientific-writing": {
+      "aliases": [
+        "scientific-writing",
+        "sci-write"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "vendor/scientific-skills/scientific-writing",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "statistical-analysis": {
+      "aliases": [
+        "statistical-analysis",
+        "stats"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "vendor/scientific-skills/statistical-analysis",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
+    },
+    "verification-gate": {
+      "aliases": [
+        "verification-gate",
+        "verify-gate"
+      ],
+      "cloud": {
+        "skill_id": null
+      },
+      "path": "agent-operations/verification-gate",
+      "targets": [
+        "codex",
+        "claude",
+        "hermes",
+        "opencode"
+      ]
     }
   }
 }

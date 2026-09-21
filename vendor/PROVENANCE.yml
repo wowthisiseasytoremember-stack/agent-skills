@@ -1,0 +1,104 @@
+schema: apm-provenance/v1
+generated_at: "2026-09-21T21:40:00Z"
+reviewed_by: ichabod
+
+capabilities:
+  diagram-design:
+    upstream_repository: cathrynlavery/diagram-design
+    upstream_ref: main
+    upstream_sha: dc1ace47b99a419e42d01a03cb6ace5346efa8ae
+    license: MIT
+    canonical_local_path: vendor/diagram-design
+    tree_sha256: ce429dad744e4afdd0892a93f0d46c0fd231783242782b74f99aa4ce60bad284
+    date_reviewed: "2026-09-21"
+    notes: "Architecture diagrams, UI storyboards, visual flowcharts"
+
+  last30days:
+    upstream_repository: mvanhorn/last30days-skill
+    upstream_ref: v3.25.0
+    upstream_sha: beb7ed1868f034f198842174bfe2694e44b78363
+    license: MIT
+    canonical_local_path: vendor/last30days
+    tree_sha256: 8fef1160bcc0b0749587f4629ba59c908857f60eb30ca0cac9cd26149127c0ab
+    date_reviewed: "2026-09-21"
+    notes: "Zero-config research across Reddit, Hacker News, Polymarket, GitHub; optional CLI/paid sources"
+
+  paper-lookup:
+    upstream_repository: K-Dense-AI/scientific-agent-skills
+    upstream_ref: v2.69.0
+    upstream_sha: 45af7aefb40e0ef12fda62c6f01d1067ea1e1222
+    license: MIT
+    canonical_local_path: vendor/scientific-skills/paper-lookup
+    tree_sha256: a6b3b7df2b770ad9ef516e5cd133157958a18a0131b0742b49b0512a9213a7ff
+    date_reviewed: "2026-09-21"
+    notes: "18 scholarly search APIs, zero credential requirement"
+
+  literature-review:
+    upstream_repository: K-Dense-AI/scientific-agent-skills
+    upstream_ref: v2.69.0
+    upstream_sha: 45af7aefb40e0ef12fda62c6f01d1067ea1e1222
+    license: MIT
+    canonical_local_path: vendor/scientific-skills/literature-review
+    tree_sha256: 098a638c0b18562780e40ad86154a5842fe85c2a98fd0bb2b544f04726067494
+    date_reviewed: "2026-09-21"
+    notes: "Structured academic literature reviews and evidence synthesis"
+
+  citation-management:
+    upstream_repository: K-Dense-AI/scientific-agent-skills
+    upstream_ref: v2.69.0
+    upstream_sha: 45af7aefb40e0ef12fda62c6f01d1067ea1e1222
+    license: MIT
+    canonical_local_path: vendor/scientific-skills/citation-management
+    tree_sha256: 519aad7e601116a8afe73b66537497bcfe1c1a4af12d5f45fe2ab2afa22d1cb7
+    date_reviewed: "2026-09-21"
+    notes: "BibTeX, DOI, and citation graph management"
+
+  scientific-writing:
+    upstream_repository: K-Dense-AI/scientific-agent-skills
+    upstream_ref: v2.69.0
+    upstream_sha: 45af7aefb40e0ef12fda62c6f01d1067ea1e1222
+    license: MIT
+    canonical_local_path: vendor/scientific-skills/scientific-writing
+    tree_sha256: ad4d3c35e6518a450a0a7dfa7d713294d7fff07fc4b7aff51b9aca90698466cc
+    date_reviewed: "2026-09-21"
+    notes: "Rigorous scientific prose, methodology reporting, and formatting"
+
+  scientific-visualization:
+    upstream_repository: K-Dense-AI/scientific-agent-skills
+    upstream_ref: v2.69.0
+    upstream_sha: 45af7aefb40e0ef12fda62c6f01d1067ea1e1222
+    license: MIT
+    canonical_local_path: vendor/scientific-skills/scientific-visualization
+    tree_sha256: 1e311aa40956d9019af281abebccfe5031000d34855eeb02b7c92c5ac8cb851c
+    date_reviewed: "2026-09-21"
+    notes: "Publication-quality scientific charting, figures, and plots"
+
+  statistical-analysis:
+    upstream_repository: K-Dense-AI/scientific-agent-skills
+    upstream_ref: v2.69.0
+    upstream_sha: 45af7aefb40e0ef12fda62c6f01d1067ea1e1222
+    license: MIT
+    canonical_local_path: vendor/scientific-skills/statistical-analysis
+    tree_sha256: 3d397852fcbf41f3bfc7e2b0100bbbdd4c83600e1ad744e2dd6366821103f165
+    date_reviewed: "2026-09-21"
+    notes: "Parametric, non-parametric, and Bayesian statistical tests"
+
+  geopandas:
+    upstream_repository: K-Dense-AI/scientific-agent-skills
+    upstream_ref: v2.69.0
+    upstream_sha: 45af7aefb40e0ef12fda62c6f01d1067ea1e1222
+    license: MIT
+    canonical_local_path: vendor/scientific-skills/geopandas
+    tree_sha256: 8d3f8a8867cc78152de115f0d9c5badef3654aab3b0cbedf70538ffaf12dee42
+    date_reviewed: "2026-09-21"
+    notes: "Geospatial vector analysis and geographic mapping"
+
+  graphify:
+    upstream_repository: Graphify-Labs/graphify
+    upstream_ref: v0.9.65
+    upstream_sha: 7ca736cf94cd2fe8564704e31aa0e9b9f6e04fc6
+    license: Apache-2.0
+    canonical_local_path: vendor/graphify
+    tree_sha256: 65167040f390ac8a197ff29c387073f54c9d4ea1bcbf5d6e247fd72191ea3d5f
+    date_reviewed: "2026-09-21"
+    notes: "AST/call-graph code intelligence toolchain snapshot (pyproject.toml, uv.lock, source package)"
