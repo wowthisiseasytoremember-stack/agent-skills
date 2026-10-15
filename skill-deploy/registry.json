@@ -16,6 +16,24 @@
       "cloud": {
         "skill_id": null
       }
+    },
+    "job-application-engine": {
+      "path": "agent-operations/job-application-engine",
+      "aliases": [
+        "job application engine",
+        "ats submit",
+        "greenhouse apply",
+        "ashby apply"
+      ],
+      "targets": [
+        "codex",
+        "claude",
+        "cursor",
+        "hermes"
+      ],
+      "cloud": {
+        "skill_id": null
+      }
     }
   }
 }
