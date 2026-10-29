@@ -16,6 +16,23 @@
       "cloud": {
         "skill_id": null
       }
+    },
+    "institutional-method": {
+      "path": "research-advisory/institutional-method",
+      "aliases": [
+        "/done-right",
+        "done right",
+        "institutional method",
+        "how would experts do this"
+      ],
+      "targets": [
+        "codex",
+        "claude",
+        "openai-cloud"
+      ],
+      "cloud": {
+        "skill_id": null
+      }
     }
   }
 }
