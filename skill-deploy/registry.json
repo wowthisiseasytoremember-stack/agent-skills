@@ -16,22 +16,6 @@
       "cloud": {
         "skill_id": null
       }
-    },
-    "production-feedback-intake": {
-      "path": "content-production/production-feedback-intake",
-      "aliases": [
-        "production feedback",
-        "ingest editorial feedback",
-        "review creative feedback"
-      ],
-      "targets": [
-        "codex",
-        "claude",
-        "openai-cloud"
-      ],
-      "cloud": {
-        "skill_id": null
-      }
     }
   }
 }
