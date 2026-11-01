@@ -54,7 +54,7 @@ class RiskPolicyTests(unittest.TestCase):
             files = tmp / "files.json"
             output = tmp / "report.json"
             summary = tmp / "summary.md"
-            files.write_text('{"filename":"README.md"}\n{"filename":"src/thing.py"}\n')
+            files.write_text(json.dumps([[{"filename": "README.md"}, {"filename": "src/thing.py"}]]))
             proc = subprocess.run(
                 [sys.executable, str(Path(__file__).with_name("risk.py")),
                  "--files", str(files), "--output", str(output),
