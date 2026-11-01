@@ -9,7 +9,6 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
-import os
 from pathlib import Path
 from typing import Any
 
@@ -58,7 +57,7 @@ def load_policy(path: Path | None) -> dict[str, list[str]]:
 def classify_one(filename: str, policy: dict[str, list[str]]) -> tuple[str, str]:
     if not filename or filename.startswith("/") or "\\" in filename or ".." in filename.split("/"):
         raise ValueError(f"Invalid repository-relative path: {filename!r}")
-    path = filename.lstrip("./")
+    path = filename.removeprefix("./")
     basename = path.rsplit("/", 1)[-1]
     parts = path.split("/")
     if path == ".github/pr-risk-policy.json":
