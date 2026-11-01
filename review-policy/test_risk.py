@@ -48,10 +48,10 @@ class RiskPolicyTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             classify_one("../unsafe.py", EMPTY)
 
-    def test_ndjson_cli_produces_machine_readable_receipt(self):
+    def test_paginated_json_cli_produces_machine_readable_receipt(self):
         with tempfile.TemporaryDirectory() as d:
             tmp = Path(d)
-            files = tmp / "files.ndjson"
+            files = tmp / "files.json"
             output = tmp / "report.json"
             summary = tmp / "summary.md"
             files.write_text('{"filename":"README.md"}\n{"filename":"src/thing.py"}\n')
