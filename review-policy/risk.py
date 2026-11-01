@@ -103,22 +103,25 @@ def classify_files(files: list[str], policy: dict[str, list[str]]) -> dict[str, 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--files", type=Path, required=True, help="NDJSON from GitHub pull-files API")
+    parser.add_argument("--files", type=Path, required=True, help="JSON pages from gh api --paginate --slurp")
     parser.add_argument("--policy", type=Path, default=None)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--summary", type=Path, required=True)
     args = parser.parse_args()
     try:
         policy = load_policy(args.policy)
-        raw_lines = args.files.read_text(encoding="utf-8").splitlines()
+        pages = json.loads(args.files.read_text(encoding="utf-8"))
+        if not isinstance(pages, list):
+            raise ValueError("GitHub files response must be an array")
+        if pages and isinstance(pages[0], list):
+            items = [item for page in pages for item in page]
+        else:
+            items = pages
         filenames: list[str] = []
-        for line in raw_lines:
-            if not line.strip():
-                continue
-            obj = json.loads(line)
-            if not isinstance(obj, dict) or not isinstance(obj.get("filename"), str):
-                raise ValueError("GitHub files API input must be NDJSON with filename")
-            filenames.append(obj["filename"])
+        for item in items:
+            if not isinstance(item, dict) or not isinstance(item.get("filename"), str):
+                raise ValueError("GitHub files response lacks a filename")
+            filenames.append(item["filename"])
         report = classify_files(filenames, policy)
     except (ValueError, OSError, json.JSONDecodeError) as exc:
         print(f"::error::Risk classification unavailable: {exc}")
