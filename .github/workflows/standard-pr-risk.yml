@@ -1,0 +1,65 @@
+name: Standard PR Risk Review
+
+on:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: standard-pr-risk-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  classify:
+    name: Classify change risk (advisory)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Checkout caller (data only, never execute PR code)
+        uses: actions/checkout@v4
+        with:
+          path: target
+          persist-credentials: false
+
+      - name: Checkout shared policy
+        uses: actions/checkout@v4
+        with:
+          repository: wowthisiseasytoremember-stack/agent-skills
+          ref: ${{ github.repository == 'wowthisiseasytoremember-stack/agent-skills' && github.event.pull_request.head.sha || 'master' }}
+          path: shared
+          persist-credentials: false
+
+      - name: Run policy contract tests
+        run: python -m unittest discover -s shared/review-policy -p 'test_*.py'
+
+      - name: Read all changed file paths from the PR API
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" > changed-files.json
+
+      - name: Produce standardized machine-readable risk receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python shared/review-policy/risk.py \
+            --files changed-files.json \
+            --policy target/.github/pr-risk-policy.json \
+            --output risk-report.json \
+            --summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Archive risk receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-risk-${{ github.event.pull_request.number }}-${{ github.run_id }}
+          path: risk-report.json
+          if-no-files-found: ignore
+          retention-days: 30
