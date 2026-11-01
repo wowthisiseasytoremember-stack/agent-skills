@@ -3,6 +3,12 @@ name: Standard PR Risk Review
 on:
   pull_request:
   workflow_call:
+    inputs:
+      policy_ref:
+        description: 'Exact agent-skills commit SHA to pin the classifier; defaults to master for pilot use'
+        type: string
+        required: false
+        default: master
 
 permissions:
   contents: read
@@ -29,7 +35,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: wowthisiseasytoremember-stack/agent-skills
-          ref: ${{ github.repository == 'wowthisiseasytoremember-stack/agent-skills' && github.event.pull_request.head.sha || 'master' }}
+          ref: ${{ github.repository == 'wowthisiseasytoremember-stack/agent-skills' && github.event.pull_request.head.sha || inputs.policy_ref || 'master' }}
           path: shared
           persist-credentials: false
 
