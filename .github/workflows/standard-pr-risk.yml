@@ -25,12 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 7
     steps:
-      - name: Checkout caller (data only, never execute PR code)
-        uses: actions/checkout@v4
-        with:
-          path: target
-          persist-credentials: false
-
       - name: Checkout shared policy
         uses: actions/checkout@v4
         with:
@@ -47,9 +41,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" > changed-files.json
+          # The caller's repository is intentionally never checked out or executed.
+          # Fetch optional escalation-only policy as data from this exact PR head.
+          if gh api "repos/$GITHUB_REPOSITORY/contents/.github/pr-risk-policy.json?ref=$HEAD_SHA" --jq '.content' > policy.b64 2>policy.err; then
+            base64 --decode < policy.b64 > pr-risk-policy.json
+          elif grep -q 'HTTP 404' policy.err; then
+            printf '{}' > pr-risk-policy.json
+          else
+            cat policy.err >&2
+            exit 1
+          fi
 
       - name: Produce standardized machine-readable risk receipt
         shell: bash
@@ -57,7 +62,7 @@ jobs:
           set -euo pipefail
           python shared/review-policy/risk.py \
             --files changed-files.json \
-            --policy target/.github/pr-risk-policy.json \
+            --policy pr-risk-policy.json \
             --output risk-report.json \
             --summary "$GITHUB_STEP_SUMMARY"
 
