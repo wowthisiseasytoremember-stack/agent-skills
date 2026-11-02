@@ -25,6 +25,8 @@ class RiskPolicyTests(unittest.TestCase):
             ".github/workflows/ci.yml", ".github/pr-risk-policy.json",
             "AGENTS.md", "publish/youtube.py", "src/auth/token.py",
             "deploy/compose.yaml", ".env.production",
+            "scripts/publish_scheduled.py", "scripts/cycle_6925.py",
+            "tools/upload_to_ebay.py",
         ):
             with self.subTest(filename=filename):
                 self.assertEqual(classify_one(filename, EMPTY)[0], "high")
