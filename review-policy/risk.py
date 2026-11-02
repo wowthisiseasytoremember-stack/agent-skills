@@ -23,6 +23,10 @@ HIGH_BASENAMES = {
     "AGENTS.md", "CODEOWNERS", "Dockerfile", "docker-compose.yml",
     "docker-compose.yaml", ".env", ".env.production",
 }
+HIGH_EXECUTABLE_PREFIXES = (
+    "publish_", "publisher_", "upload_", "promote_", "deploy_",
+    "delete_", "release_", "cycle_6925", "crosspost_",
+)
 HIGH_COMPONENTS = {
     "auth", "authentication", "secrets", "credentials", "permissions",
     "payments", "billing", "publisher", "publish", "deploy", "migrations",
@@ -70,6 +74,11 @@ def classify_one(filename: str, policy: dict[str, list[str]]) -> tuple[str, str]
         or (len(parts) > 1 and parts[0] == ".github" and basename == "CODEOWNERS")
     ):
         return "high", "protected release/control-plane path"
+    if (
+        basename.lower().startswith(HIGH_EXECUTABLE_PREFIXES)
+        and Path(path).suffix.lower() in CODE_SUFFIXES
+    ):
+        return "high", "release/external-mutation executable"
     if path.startswith(("docs/", "documentation/", "tests/", "test/")) and Path(path).suffix.lower() in DOC_SUFFIXES:
         return "low", "documentation or test prose"
     if any(part.lower() in HIGH_COMPONENTS for part in parts[:-1]):
