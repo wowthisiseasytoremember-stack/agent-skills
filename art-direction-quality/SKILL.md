@@ -2,8 +2,9 @@
 name: art-direction-quality
 description: Enforce reference-led, distinctive visual direction and screenshot-verified quality for AI-assisted websites, apps, dashboards, and interactive experiences. Use for initial design briefs, UI implementation, redesigns, and pre-release visual QA. Complements (does not replace) ui-design-system, ux-researcher-designer, subtle-polish-mechanics and web-quality/qa-testing.
 version: 1.0.0
-status: proposed
+status: pilot
 source_reviewed: 2026-11-04
+sync_status: repository_only
 ---
 
 # Art Direction & Visual Quality — Agent Operating Standard
