@@ -51,6 +51,10 @@ Skills are organized into squad directories. Each skill is a directory with a SK
 Skills are consumed by Claude Code via `~/.claude/skills/` or agent-board skill routing.
 Check agent-board AGENTS.md for how skills are dispatched.
 
+## Visual/UI design quality overlay (2026-11-04)
+
+For user-facing websites, dashboards, mobile screens, or editorial graphics, load [art-direction-quality/SKILL.md](art-direction-quality/SKILL.md) alongside the relevant UI design, UX, and web QA skills. This adds **approved visual references, all-state coherence, copy editing, and screenshot receipts**. It is **not** a visual style or permission to override project-specific approved brand decisions. The original [Reddit showcase analysis](art-direction-quality/references/claudeai-showcase-2026-11-04.md) is an evidence snapshot, not a quality benchmark.
+
 ## Maintenance
 - Add new skills as squad subdirectories
 - Sync with local Claude Code skills periodically
